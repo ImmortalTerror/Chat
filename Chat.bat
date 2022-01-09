@@ -1,18 +1,73 @@
 @echo off
 
+set VERSION=4.0 BETA
+
 
 @REM Chat made by Immortal Terror (Discord: Immortal Terror#6969 | Github: https://github.com/ImmortalTerror | Youtube: https://www.youtube.com/channel/UCMwG-Wmm3RnzPT5bzyjzpeA | Instagram: https://www.instagram.com/immortalterror07/ )
-@REM Encryption by https://www.youtube.com/technologycrazy
-@REM Huge thanks to the amazing people of stack overflow
+
+Set _fBlack=[30m
+Set _bBlack=[40m
+Set _fRed=[31m
+Set _bRed=[41m
+Set _fGreen=[32m
+Set _bGreen=[42m
+Set _fYellow=[33m
+Set _bYellow=[43m
+Set _fBlue=[34m
+Set _bBlue=[44m
+Set _fMag=[35m
+Set _bMag=[45m
+Set _fCyan=[36m
+Set _bCyan=[46m
+Set _fLGray=[37m
+Set _bLGray=[47m
+Set _fDGray=[90m
+Set _bDGray=[100m
+Set _fBRed=[91m
+Set _bBRed=[101m
+Set _fBGreen=[92m
+Set _bBGreen=[102m
+Set _fBYellow=[93m
+Set _bBYellow=[103m
+Set _fBBlue=[94m
+Set _bBBlue=[104m
+Set _fBMag=[95m
+Set _bBMag=[105m
+Set _fBCyan=[96m
+Set _bBCyan=[106m
+Set _fBWhite=[97m
+Set _bBWhite=[107m
+Set _RESET=[0m
+
+
+@REM Checks if info folder exists
+if NOT EXIST info (
+    echo info folder %_fRed%not found%_RESET%
+    echo please download the latest release from %_bBWhite%%_fBlack%https://github.com/ImmortalTerror/Chat/releases/tag/chat%_RESET%
+    pause>nul
+    exit
+)
 
 
 
-if NOT EXIST info\users\*.dll echo First time setup>info\ftsu.tmp
+@REM This has been disabled to make it easier to develop the program
+
+@REM Makes info folder hidden if its not
+@REM attrib info>%temp%\attrib.tmp
+@REM set /p attrib=<%temp%\attrib.tmp
+@REM del /q %temp%\attrib.tmp
+@REM set correct=   SH                %cd%\info
+@REM if "%attrib%" NEQ "%correct%" (
+@REM     attrib +S +H info
+@REM )
 
 
+
+@REM Checks if debug mode is on
 if EXIST debug (
     set /a DEBUG=1
     set NAME=test
+    set ADMINCH=FALSE
     del /q debug
     goto :CHATSTART
 )
@@ -20,56 +75,64 @@ set /a DEBUG=0
 
 
 
+@REM Checks if any users exists and if it should go to first time setup
+if NOT EXIST info\users\*.dll echo First time setup>info\ftsu.tmp
+
+
+
 cd info
 set /a FTSU=0
 if EXIST ftsu.tmp goto :FIRSTTIMESETUP
-cd ..
-
-
-
-cd info
 
 
 
 @REM dashboard
 echo %DATE% %TIME% ^>^> %USERNAME% has made it to the dashboard. >>logs.log
 :START
-mode CON: COLS=65 LINES=60
+
+
+
+@REM Fix the size once im done making v4
+
+mode CON: COLS=68 LINES=54
 cls
-title WELCOME - V3.9.2
-color 2
-echo /////////////////////////////
-echo /         WELCOME           /
-echo /   PRESS ANY KEY TO LOGIN  /
-echo /////////////////////////////
+title WELCOME - %VERSION%
+color 7
+echo %_fGreen%%_bGreen%/////////////////////////////
+echo /%_RESET%         %_fBlack%%_bRed%WELCOME%_RESET%           %_fGreen%%_bGreen%/
+echo /%_RESET%   %_fBlack%%_bBWhite%PRESS ANY KEY TO LOGIN%_RESET%  %_fGreen%%_bGreen%/
+echo /////////////////////////////%_RESET%
 echo.
 echo.
-echo This program is still being worked on. There will be more soon
+echo This program is still being worked on. %_fBGreen%There will be more soon%_RESET%
 echo.
 echo.
-echo ///////////////////
-echo /  ANNOUNCEMENTS  /
-echo /   AND UPDATES   /
-echo ///////////////////
+echo %_bGreen%%_fGreen%///////////////////
+echo /%_RESET%  %_fRed%ANNOUNCEMENTS  %_bGreen%%_fGreen%/
+echo /%_RESET%   AND %_fBGreen%UPDATES   %_bGreen%%_fGreen%/
+echo ///////////////////%_RESET%
 echo.
-echo ANNOUNCEMENTS:
+echo %_bRed%%_fBlack%ANNOUNCEMENTS:%_RESET%
+
+@REM VVVV CHANGE THIS VVVV
+
 echo V4.0 coming soon!
 echo.
 echo.
-echo UPDATES:
-echo V3.9.2
+echo %_bGreen%%_fBlack%UPDATES:%_RESET%
+echo %_fBBlue%V3.9.2%_RESET%
 echo -Fixed some logging errors
 echo -Added First time setup
 echo -Reworked admin system
 echo -Added /promote command (ADMIN COMMAND)
 echo -Added /demote command (ADMIN COMMAND)
 echo.
-echo V3.9.1
+echo %_fBBlue%V3.9.1%_RESET%
 echo -When typing passwords, all characters will now be viewed as "*"
 echo -/chatas now supports commands
 echo -Added an easter egg :)
 echo.
-echo V3.9
+echo %_fBBlue%V3.9%_RESET%
 echo -Reworked /nick
 echo -Reworked /ad
 echo -Reworked /chatas
@@ -85,37 +148,25 @@ echo -Added better ban logging.
 echo -Added /bans (ADMIN COMMAND)
 echo -Added /debug (ADMIN COMMAND)
 echo.
-echo V3.8
-echo -Fixed bug with banning name with spaces
-echo -Removed password for /clearchat and /clearlogs
-echo -Other small fixes and changes
 echo.
-echo V3.7
-echo - Passwords can now contain spaces
-echo.
-echo.
-echo TO DO:
-echo -Private DM's
 pause>nul
 
 
 
-cd users
 :ACCOUNTEXIST
 cls
 mode CON: COLS=48 LINES=11
 color 7
 title LOGIN
 echo do you already have an account?
-choice
+echo.
+cmdmenusel.exe 0770 "YES" "NO"
 if %ERRORLEVEL%==1 (
-    cd ..
     echo %DATE% %TIME% ^>^> %USERNAME% Has gone to the login page >>logs.log
     cd users
     goto :LOGIN
 )
 if %ERRORLEVEL%==2 (
-    cd ..
     echo %DATE% %TIME% ^>^> %USERNAME% Has gone to make a new account >>logs.log
     cd users
     goto :ACCOUNTMAKE
@@ -131,13 +182,13 @@ exit
 cls
 title LOGIN - /back to go back to dashboard
 color 2
-echo ////////////////////
-echo /   PLEASE LOGIN   /
-echo ////////////////////
+echo %_bBGreen%%_fBGreen%////////////////////
+echo /%_RESET%   PLEASE LOGIN   %_bBGreen%%_fBGreen%/
+echo ////////////////////%_RESET%
 echo.
 echo.
 echo.
-set /p NAME=Username:
+set /p NAME=Username: 
 if "%NAME%"=="/back" (
     set NAME=
     cd ..
@@ -149,14 +200,14 @@ if exist "%USERNAME%.ban" goto :BAN
 if exist "%NAME%.dll" goto :PASSWORD
 cls
 color 4
-echo //////////////////////////
-echo /   USERNAME NOT FOUND   /
-echo //////////////////////////
+echo %_fRed%%_bRed%//////////////////////////
+echo /%_RESET%   %_fRed%USERNAME NOT FOUND   %_fRed%%_bRed%/
+echo //////////////////////////%_RESET%
 echo 
 cd ..
 echo %DATE% %TIME% ^>^> %USERNAME% Has attempted to log into an account that does not exist >>logs.log
 cd users
-timeout /t 3 /nobreak >nul
+timeout /t 3 >nul
 goto :LOGIN
 
 :PASSWORD
@@ -217,9 +268,9 @@ goto incorrect_credentials
 :incorrect_credentials
 cls
 color 4
-echo //////////////////////
-echo /   WRONG PASSWORD   /
-echo //////////////////////
+echo %_bRed%%_fRed%//////////////////////
+echo /%_RESET%   %_fRed%WRONG PASSWORD   %_fRed%%_bRed%/
+echo //////////////////////%_RESET%
 echo 
 cd ..
 echo %DATE% %TIME% ^>^> %USERNAME% Has entered the password for *%NAME% wrong >>logs.log
@@ -239,13 +290,13 @@ goto :RULES
 cls
 title LOGIN - /back to go back to dashboard
 color 7
-echo /////////////////////////////
-echo /    ENTER NEW USERNAME     /
-echo /////////////////////////////
+echo %_fBGreen%%_bBGreen%/////////////////////////////
+echo /%_RESET%    ENTER NEW USERNAME     %_fBGreen%%_bBGreen%/
+echo /////////////////////////////%_RESET%
 echo.
 echo.
 echo.
-set /p new_NAME=Username:
+set /p new_NAME=Username: 
 if "%new_NAME%"=="/back" (
     set NAME=
     cd ..
@@ -257,9 +308,9 @@ if exist "%new_NAME%.dll" goto :ALREADYEXIST
 :NEWPASSWORD
 cls
 color 7
-echo //////////////////////
-echo /   ENTER PASSWORD   /
-echo //////////////////////
+echo %_bBGreen%%_fBGreen%//////////////////////
+echo /%_RESET%   ENTER PASSWORD   %_bBGreen%%_fBGreen%/
+echo //////////////////////%_RESET%
 echo.
 echo.
 echo.
@@ -284,11 +335,11 @@ if "%new_password%"=="%confirm_new_password%" goto :PASSWORDSMATCH
 
 cls
 color 4
-echo //////////////////////////////
-echo /   PASSWORD'S DON'T MATCH   /
-echo //////////////////////////////
+echo %_bRed%%_fRed%//////////////////////////////
+echo /%_RESET%   %_fRed%PASSWORD'S DON'T MATCH   %_fRed%%_bRed%/
+echo //////////////////////////////%_RESET%
 echo 
-timeout /t 3 /nobreak>nul
+timeout /t 3>nul
 set new_password=
 set confirm_new_password=
 goto :NEWPASSWORD
@@ -317,7 +368,7 @@ echo p!%new_password% >"%new_NAME%".dll
 echo a!FALSE>>"%new_NAME%".dll
 
 echo.
-echo Account Successfully Created!
+echo %_fGreen%Account Successfully Created!%_RESET%
 cd ..
 echo %DATE% %TIME% ^>^> %username% created account ^"*%new_NAME%^" >>logs.log
 cd users
@@ -330,10 +381,10 @@ goto :LOGIN
 :ALREADYEXIST
 cls
 color 4
-echo ////////////////////////////////////////
-echo /   THIS ACCOUNT NAME ALREADY EXISTS   /
-echo /     PLEASE TRY ANOTHER USERNAME      /
-echo ////////////////////////////////////////
+echo %_fRed%%_bRed%////////////////////////////////////////
+echo /%_RESET%   %_fRed%THIS ACCOUNT NAME ALREADY EXISTS   %_fRed%%_bRed%/
+echo /%_RESET%     %_fGreen%PLEASE TRY ANOTHER USERNAME      %_bRed%%_fRed%/
+echo ////////////////////////////////////////%_RESET%
 echo 
 timeout /t 3 >nul
 goto :ACCOUNTMAKE
@@ -344,21 +395,20 @@ goto :ACCOUNTMAKE
 :RULES
 mode CON: COLS=100 LINES=15
 cls
-echo ///////////////////
-echo /      RULES      /
-echo /   PLEASE READ   /
-echo ///////////////////
+echo %_bBBlue%%_fBBlue%///////////////////
+echo /%_RESET%      %_fBGreen%RULES      %_bBBlue%%_fBBlue%/
+echo /%_RESET%   %_fRed%PLEASE READ   %_bBBlue%%_fBBlue%/
+echo ///////////////////%_RESET%
 echo.
-echo 1. Spam will not be tolerated.
-echo 3. DO NOT delete any files
-echo 4. Discimination is not allowed, this includes racisim, homophobic/transphobic slurs and more.
-echo 5. Use common sense, if you feel like you shouldn't do something, then don't.
+echo 1. %_fblue%Spam will not be tolerated.%_RESET%
+echo 3. %_fblue%DO NOT delete any files%_RESET%
+echo 4. %_fblue%Discrimination is not allowed, this includes racism, homophobic/transphobic slurs and more.%_RESET%
+echo 5. %_fblue%Use common sense, if you feel like you shouldn't do something, then don't.%_RESET%
 echo.
-echo If you break these rules, i can ban you.
+echo If you break these rules, %_fRed%i can ban you.%_RESET%
 echo.
 echo Rule breakers will be punished
 Pause>nul
-
 
 
 @REM starts the chat window
@@ -389,9 +439,9 @@ goto :CHAT
 cls
 color 4
 title BANNED
-echo ////////////////////////////
-echo /   YOU HAVE BEEN BANNED   /
-echo ////////////////////////////
+echo %_bRed%%_fRed%////////////////////////////
+echo /   %_bBWhite%%_fRed%YOU HAVE BEEN BANNED%_bRed%%_fRed%   /
+echo ////////////////////////////%_RESET%
 echo.
 echo go away
 echo 
@@ -415,15 +465,15 @@ cls
 color 7
 title First Time Setup
 set /a FTSU=1
-echo //////////////////
-echo /   FIRST TIME   /
-echo /     SETUP      /
-echo //////////////////
+echo %_fBGreen%%_bBGreen%//////////////////
+echo /%_RESET%   FIRST TIME   %_fBGreen%%_bBGreen%/
+echo /%_RESET%     SETUP      %_fBGreen%%_bBGreen%/
+echo //////////////////%_RESET%
 echo.
-echo Welcome to the first time set up page for this chat program.
-echo To begin, you will need to make an account with admin permissions.
+echo %_fBlue%Welcome to the first time set up page for this chat program.
+echo To begin, you will need to make an account with %_fGreen%admin permissions%_RESET%.%_bBGreen%%_fBlack%
 echo.
-echo Press any key to begin.
+echo Press any key to begin.%_RESET%
 del ftsu.tmp
 pause>nul
 cd users
@@ -439,7 +489,7 @@ color 2
 findstr /V /I /R /C:"^a\>" "%new_Name%.dll" > "%new_Name%.dll.tmp"
 move /Y "%new_Name%.dll.tmp" "%new_Name%.dll">nul
 echo a!TRUE>>%new_Name%.dll
-echo The account "%new_Name:-= %" has been granted admin permissions!
+echo The account %_bBWhite%%_fBlack%"%new_Name:-= %"%_RESET% has been granted admin permissions!
 echo you may continue...
 set /a FTSU=0
 timeout /t 5 >nul

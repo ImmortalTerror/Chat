@@ -1,5 +1,42 @@
 @echo off
 
+set VERSION=4.0 BETA
+
+@REM Adds colours (very pretty)
+Set _fBlack=[30m
+Set _bBlack=[40m
+Set _fRed=[31m
+Set _bRed=[41m
+Set _fGreen=[32m
+Set _bGreen=[42m
+Set _fYellow=[33m
+Set _bYellow=[43m
+Set _fBlue=[34m
+Set _bBlue=[44m
+Set _fMag=[35m
+Set _bMag=[45m
+Set _fCyan=[36m
+Set _bCyan=[46m
+Set _fLGray=[37m
+Set _bLGray=[47m
+Set _fDGray=[90m
+Set _bDGray=[100m
+Set _fBRed=[91m
+Set _bBRed=[101m
+Set _fBGreen=[92m
+Set _bBGreen=[102m
+Set _fBYellow=[93m
+Set _bBYellow=[103m
+Set _fBBlue=[94m
+Set _bBBlue=[104m
+Set _fBMag=[95m
+Set _bBMag=[105m
+Set _fBCyan=[96m
+Set _bBCyan=[106m
+Set _fBWhite=[97m
+Set _bBWhite=[107m
+Set _RESET=[0m
+
 if "%1" NEQ "1" goto :FAIL
 
 set NAME=%2
@@ -21,12 +58,12 @@ goto :CHATJOIN
 @REM If user did not run chat.bat
 :FAIL
 cls
-title NOT AUTHORIZED
+title %_fRed%NOT AUTHORIZED%_RESET%
 color 4
-echo //////////////////////
-echo /   NOT AUTHORIZED   /
-echo /   RUN "chat.bat"   /
-echo //////////////////////
+echo %_fRed%%_bRed%//////////////////////
+echo /   %_fBWhite%%_bBlack%NOT AUTHORIZED%_fRed%%_bRed%   /
+echo /   %_fBWhite%%_bBlack%RUN "chat.bat"%_fRed%%_bRed%   /
+echo //////////////////////%_RESET%
 echo 
 echo %DATE% %TIME% ^>^> %USERNAME% Has tried to access type.bat without running chat.bat >>logs.log
 timeout /t 5 /nobreak >nul
@@ -36,14 +73,12 @@ exit
 
 :CHATJOIN
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Joined the chat >> logs.log
-echo %DATE% %TIME% ^>^> %NAME% Joined the chat >> chat.log
+echo %_fblue%%DATE% %TIME% %_fRed%^>^> %_fBGreen%%NAME%%_RESET% Joined the chat >> chat.log
 
 @REM Main chat
 :CHAT
-cd users
-if exist "%NAME%.ban" goto :BANNED
-if exist "%USERNAME%.ban" goto :BANNED
-cd ..
+if exist "users\%NAME%.ban" goto :BANNED
+if exist "users\%USERNAME%.ban" goto :BANNED
 cls
 
 if "%ADMIN%" NEQ "TRUE" (
@@ -56,12 +91,10 @@ color 7
 
 set /p TEXT=^>^>
 
-cd users
-if exist "%NAME%.ban" goto :BANNED
-if exist "%USERNAME%.ban" goto :BANNED
-cd ..
+if exist "users\%NAME%.ban" goto :BANNED
+if exist "users\%USERNAME%.ban" goto :BANNED
 
-
+if "%TEXT%"=="" goto :CHAT
 
 @REM Bad words
 set "text=%text:nigger=******%"
@@ -102,9 +135,9 @@ if NOT "%TEXT%"=="%TEXT:/demote=%" goto :DEMOTE
 
 
 
-echo ^<%NAME%^> %TEXT% >> chat.log
+echo ^<%_fbGreen%%NAME%%_RESET%^> %TEXT% >> chat.log
 set TEXT=
-echo Message sent
+echo %_fBGreen%%_fBGreen%Message sent%_RESET%%_RESET%
 timeout /t 2 /nobreak >nul
 goto :CHAT
 if %CHATASED%==1 goto :CHATASLOOP
@@ -115,37 +148,36 @@ if %CHATASED%==1 goto :CHATASLOOP
 :help
 cls
 title /help
-echo Commands:
-echo /help - Brings up this menu
-echo /info - Gives you some info
-echo /logout - Go's back the login page
-echo /nick (NCIKNAME) - Set a nickname
-echo /changepassword - Menu to change your password
-echo /deleteaccount - Deletes your account
-if %NICKED%==1 echo /back - Removes your nickname
+echo %_fBGreen%Commands:%_RESET%
+echo %_fBBlue%/help %_fRed%- %_RESET%Brings up this menu
+echo %_fBBlue%/info %_fRed%- %_RESET%Gives you some info
+echo %_fBBlue%/logout %_fRed%- %_RESET%Go's back the login page
+echo %_fBBlue%/nick (NCIKNAME) %_fRed%- %_RESET%Set a nickname
+echo %_fBBlue%/changepassword %_fRed%- %_RESET%Menu to change your password
+echo %_fBBlue%/deleteaccount %_fRed%- %_RESET%Deletes your account
+if %NICKED%==1 echo /back %_fRed%- %_RESET%Removes your nickname
 if "%ADMIN%"=="TRUE" echo.
-if "%ADMIN%"=="TRUE" echo ADMIN COMMANDS:
-if "%ADMIN%"=="TRUE" echo.
-if "%ADMIN%"=="TRUE" echo /logs - This will show you when people joined the chat and what there names are ^(stoed in logs.log^).
-if "%ADMIN%"=="TRUE" echo /chatfile - This will open the file where the chat is stored ^(chat.log^).
-if "%ADMIN%"=="TRUE" echo /chatas (NAME) - Chat with a set username.
-if "%ADMIN%"=="TRUE" echo /ad (TEXT) - Advertise something in chat.
-if "%ADMIN%"=="TRUE" echo /clearchat - This will clear the chat.
-if "%ADMIN%"=="TRUE" echo /clearlogs - This will clear the logs.
-if "%ADMIN%"=="TRUE" echo /slogout - Same as /logout but it does not say it in chat.
-if "%ADMIN%"=="TRUE" echo /ban - Bans user account.
-if "%ADMIN%"=="TRUE" echo /unban - Unbans user account.
-if "%ADMIN%"=="TRUE" echo /pcban - Bans person with matching PC username.
-if "%ADMIN%"=="TRUE" echo /unpcban - unbans person with matching PC username.
-if "%ADMIN%"=="TRUE" echo /bans - Shows a list off all banned accounts
-if "%ADMIN%"=="TRUE" echo /terminate - Deletes an account.
-if "%ADMIN%"=="TRUE" echo /debug - Creates or removes debug.bat which when run will log you into an account called test instantly.
-if "%ADMIN%"=="TRUE" echo /promote (NAME) - Gives the user admin permissions
-if "%ADMIN%"=="TRUE" echo /demote (NAME) - revokes the users admin permissions
+if "%ADMIN%"=="TRUE" echo %_fBGreen%ADMIN COMMANDS:%_RESET%
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/logs %_fRed%- %_RESET%This will show you when people joined the chat and what there names are ^(stoed in logs.log^).
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/chatfile %_fRed%- %_RESET%This will open the file where the chat is stored ^(chat.log^).
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/chatas (NAME) %_fRed%- %_RESET%Chat with a set username.
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/ad (TEXT) %_fRed%- %_RESET%Advertise something in chat.
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/clearchat %_fRed%- %_RESET%This will clear the chat.
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/clearlogs %_fRed%- %_RESET%This will clear the logs.
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/slogout %_fRed%- %_RESET%Same as /logout but it does not say it in chat.
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/ban %_fRed%- %_RESET%Bans user account.
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/unban %_fRed%- %_RESET%Unbans user account.
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/pcban %_fRed%- %_RESET%Bans person with matching PC username.
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/unpcban %_fRed%- %_RESET%unbans person with matching PC username.
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/bans %_fRed%- %_RESET%Shows a list off all banned accounts
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/terminate %_fRed%- %_RESET%Deletes an account.
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/debug %_fRed%- %_RESET%Creates or removes debug.bat which when run will log you into an account called test instantly.
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/promote (NAME) %_fRed%- %_RESET%Gives the user admin permissions
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/demote (NAME) %_fRed%- %_RESET%revokes the users admin permissions
 if "%ADMIN%"=="TRUE" echo.
 if "%ADMIN%"=="TRUE" echo In the logs, any name with an * before it means it is the account name, not the computer name.
 echo.
-echo Press any key to go back
+echo %_fBGreen%Press any key to go back%_RESET%
 pause>nul
 if %CHATASED%==1 goto :CHATASLOOP
 if %NICKED%==1 goto :NCHAT
@@ -156,25 +188,25 @@ goto :CHAT
 @REM Info on the program
 :info
 title /info
-echo VERSION: 3.9.2
-echo Made by Immortal Terror  -   Encryption by some random guy I found on youtube
+echo %_fGreen%VERSION: %_fRed%%VERSION%
+echo %_fblue%Made by Immortal Terror
 echo.
-echo What is this?
-echo This is a chat system for school networks. You can type messages and any other students using this can see it.
+echo %_fbGreen%What is this?%_RESET%
+echo This is a chat system for things like school networks. You can type messages and any other people using this can see it.
 echo.
-echo How do I use it?
+echo %_fBGreen%How do I use it?%_RESET%
 echo There are 2 cmd (Command Prompt) windows open, DON'T CLOSE THEM. One of them shows the chat and the other is where you type.
 echo.
-echo Can people find out my password?
-echo No. The passwords are encrypted.
+echo %_fBGreen%Can people find out my password?%_RESET%
+echo No. The passwords are hashed.
 echo.
-echo Can i have admin perms?
-echo No, fuck off. (Unless your cool and I give you admin)
+echo %_fBGreen%Can i have admin perms?%_RESET%
+echo No, %_fRed%fuck off%_RESET%. (Unless your cool and you are given admin)
 echo.
-echo What can admins do?
+echo %_fBGreen%What can admins do?%_RESET%
 echo Ban and unban, look at logs, advertise, chat as other users, clear chat, logout silently and more.
 echo.
-echo Press any key to go back
+echo %_fGreen%Press any key to go back%_RESET%
 pause>nul
 if %CHATASED%==1 goto :CHATASLOOP
 if %NICKED%==1 goto :NCHAT
@@ -186,27 +218,27 @@ goto :CHAT
 :quit
 cls
 title /logout
-echo are you sure you want to logout?
+echo %_fRed%are you sure you want to logout?%_RESET%
 choice
 if %ERRORLEVEL%==2 (
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-echo %DATE% %TIME% ^>^> %NAME% Logged out >> chat.log
+echo %_fblue%%DATE% %TIME% %_fRed%^>^> %_fbGreen%%NAME%%_RESET% Logged out >> chat.log
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Logged out >> logs.log
 echo. >%TEMP%\CHATLOGOUT.tmp
 exit
 
 
 
-@REM Just quits the window, admin only
+@REM Silent logout. it's called "squit" because its a repurposed old command
 :squit
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> /slogout >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> /slogout >> chat.log
     cls
     echo ^>^>/slogout
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -214,7 +246,7 @@ if "%ADMIN%" NEQ "TRUE" (
 )
 cls
 title /logout (SILENT)
-echo are you sure you want to logout?
+echo %_fRed%are you sure you want to logout?%_RESET%
 choice
 if %ERRORLEVEL%==2 (
     if %CHATASED%==1 goto :CHATASLOOP
@@ -230,25 +262,26 @@ exit
 @REM Brings up the logs from logs.log, admin only
 :logs
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> /logs >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> /logs >> chat.log
     cls
     echo ^>^>/logs
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
 cls
-echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Checked logs >> logs.log
 title LOGS
 :LOGSLOOP
 cls
+echo %_fblue%Logs:%_RESET%
+echo.
 type logs.log
 echo.
 echo.
-echo Press any key to go back
-echo Press "r" to refresh
+echo %_fbGreen%Press any key to go back
+echo Press %_bBWhite%%_fBlack%"r"%_RESET%%_fbGreen% to refresh%_RESET%
 choice /c r1234567890qwetyuiopasdfghjklzxcvbnm >nul
 if %ERRORLEVEL%==1 goto :LOGSLOOP
 if %CHATASED%==1 goto :CHATASLOOP
@@ -260,18 +293,18 @@ goto :CHAT
 @REM Opens the chat file (chat.log), admin only
 :chatfile
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> /chatfile >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> /chatfile >> chat.log
     cls
     echo ^>^>/chatfile
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
 cls
-echo Opened chat.log
-echo Closes chat.log to go back
+echo Opened %_fblue%chat.log%_RESET%
+echo %_fGreen%Close %_fblue%chat.log%_fGreen% to go back%_RESET%
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) opened chat file >>logs.log
 call chat.log
 if %CHATASED%==1 goto :CHATASLOOP
@@ -283,10 +316,10 @@ goto :CHAT
 @REM Clears chat.log
 :clear
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> /clearchat >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> /clearchat >> chat.log
     cls
     echo ^>^>/clearchat
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -294,10 +327,9 @@ if "%ADMIN%" NEQ "TRUE" (
 )
 cls
 title CHAT CLEAR MENU
-color 4
-echo //////////////////////////////////////////
-echo /   ARE YOU SURE YOU WANT TO CONTINUE?   /
-echo //////////////////////////////////////////
+echo %_fRed%%_bRed%//////////////////////////////////////////
+echo /%_bBlack%   ARE YOU SURE YOU WANT TO CONTINUE?   %_bRed%/
+echo //////////////////////////////////////////%_RESET%
 echo 
 choice
 if %ERRORLEVEL%==2 (
@@ -306,13 +338,13 @@ if %ERRORLEVEL%==2 (
     goto :CHAT
 )
 cls
-echo Clearing chat.log...
+echo %_fblue%Clearing chat.log...%_RESET%
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) cleared the chat >> logs.log
 timeout /t 3 /nobreak >nul
 del /q chat.log
 color 7
 cls
-echo Cleared chat.log
+echo %_fGreen%Cleared chat.log%_RESET%
 echo.
 TIMEOUT /t 3 >nul
 if %CHATASED%==1 goto :CHATASLOOP
@@ -324,10 +356,10 @@ goto :CHAT
 @REM Clears logs.log, admin only
 :clearl
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> /clearlogs >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> /clearlogs >> chat.log
     cls
     echo ^>^>/clearlogs
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -336,9 +368,9 @@ if "%ADMIN%" NEQ "TRUE" (
 cls
 title LOGS CLEAR MENU
 color 4
-echo //////////////////////////////////////////
-echo /   ARE YOU SURE YOU WANT TO CONTINUE?   /
-echo //////////////////////////////////////////
+echo %_fRed%%_bRed%//////////////////////////////////////////
+echo /%_bBlack%   ARE YOU SURE YOU WANT TO CONTINUE?   %_bRed%/
+echo //////////////////////////////////////////%_RESET%
 echo 
 choice
 if %ERRORLEVEL%==2 (
@@ -347,12 +379,12 @@ if %ERRORLEVEL%==2 (
     goto :CHAT
 )
 cls
-echo Clearing logs.log...
+echo %_fblue%Clearing logs.log...%_RESET%
 timeout /t 3 /nobreak >nul
 del /q logs.log
 color 7
 cls
-echo Cleared logs.log
+echo %_fGreen%Cleared logs.log%_RESET%
 echo.
 TIMEOUT /t 3 >nul
 if %CHATASED%==1 goto :CHATASLOOP
@@ -364,10 +396,10 @@ goto :CHAT
 @REM chat with a chosen username, admin only
 :chatas
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> %TEXT%% >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT%% >> chat.log
     cls
     echo ^>^>%TEXT%
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -380,9 +412,9 @@ if "%CHATASN%"=="/chatas" (
     cls
     title /chatas
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -394,9 +426,9 @@ if "%CHATASN%"=="" (
     cls
     title /chatas
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -408,18 +440,17 @@ set /a CHATASED=1
 
 @REM clone of the main chat, but with your CHATAS nickname
 :CHATASLOOP
-cd users
-if exist "%NAME%.ban" goto :BANNED
-if exist "%USERNAME%.ban" goto :BANNED
-cd ..
+if exist "users\%NAME%.ban" goto :BANNED
+if exist "users\%USERNAME%.ban" goto :BANNED
 cls
 title Chatting as %CHATASN% - Type /back to go back - Type /help to see a list of commands
 color 7
 set /p TEXT=^>^>
-cd users
-if exist "%NAME%.ban" goto :BANNED
-if exist "%USERNAME%.ban" goto :BANNED
-cd ..
+if exist "users\%NAME%.ban" goto :BANNED
+if exist "users\%USERNAME%.ban" goto :BANNED
+
+if "%TEXT%"=="" goto :CHATASLOOP
+
 @REM Bad words
 set "text=%text:nigger=******%"
 set "text=%text:faggot=******%"
@@ -458,8 +489,8 @@ if NOT "%TEXT%"=="%TEXT:/promote=%" goto :PROMOTE
 if NOT "%TEXT%"=="%TEXT:/demote=%" goto :DEMOTE
 if "%TEXT%"=="/back" goto :UNCHATAS
 
-echo ^<%CHATASN%^> %TEXT% >> chat.log
-echo Message sent
+echo ^<%_fbgreen%%CHATASN%%_RESET%^> %TEXT% >> chat.log
+echo %_fBGreen%Message sent%_RESET%
 timeout /t 2 /nobreak >nul
 goto :CHATASLOOP
 
@@ -478,10 +509,10 @@ goto :CHAT
 @REM Advertises something, >> looks like this <<, admin only
 :ad
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> %TEXT% >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
     cls
     echo ^>^>%TEXT%
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -493,9 +524,9 @@ set ADVERT=%TEXT%
 if "%ADVERT%"=="/ad" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -506,19 +537,19 @@ set ADVERT=%ADVERT:/ad =%
 if "%ADVERT%"=="" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-echo ^>^> %ADVERT% ^<^<>>chat.log
+echo %_fRed%^>^> %_fbgreen%%ADVERT% %_fRed%^<^<%_RESET%>>chat.log
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) advertised "%ADVERT%">>logs.log
-echo.
-echo Advert sent
+cls
+echo %_fGreen%Advert sent%_RESET%
 timeout /t 2 /nobreak >nul
 if %CHATASED%==1 goto :CHATASLOOP
 if %NICKED%==1 goto :NCHAT
@@ -534,9 +565,9 @@ set NICK=%TEXT%
 if "%NICK%"=="/nick" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     set /a NICKED=0
@@ -546,33 +577,34 @@ set NICK=%NICK:/nick =%
 if "%NICK%"=="" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     set /a NICKED=0
     goto :CHAT
 )
 set /a NICKED=1
-echo %DATE% %TIME% ^>^> %NAME% has set there nickname to "%NICK%" >> chat.log
+echo %_fblue%%DATE% %TIME% %_fRed%^>^> %_fbgreen%%NAME%%_RESET% has set there nickname to "%_fGreen%%NICK%%_RESET%" >> chat.log
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) has set there nickname to "%NICK%" >> logs.log
 cls
-echo Nickname is now %NICK%
+echo Nickname is now %_fGreen%%NICK%%_RESET%
 timeout /t 2 /nobreak >nul
 cls
 
 @REM clone of main chat but for nicked users
 :NCHAT
-cd users
-if exist "%NAME%.ban" goto :BANNED
-if exist "%USERNAME%.ban" goto :BANNED
-cd ..
+if exist "users\%NAME%.ban" goto :BANNED
+if exist "users\%USERNAME%.ban" goto :BANNED
 cls
 if "%ADMIN%" NEQ "TRUE" title TYPE HERE %NAME% - Nickname: %NICK% - Type /back to go back - Type /help to see a list of commands
 if "%ADMIN%"=="TRUE" title TYPE HERE %NAME% - Nickname: %NICK% - Type /back to go back - Type /help to see a list of commands - ADMIN MODE -
 color 7
 set /p TEXT=^>^>
+
+if "%TEXT%"=="" goto :NCHAT
+
 @REM Bad words
 set "text=%text:nigger=******%"
 set "text=%text:faggot=******%"
@@ -583,10 +615,8 @@ set "text=%text:fag=***%"
 set "text=%text:nig=***%"
 set "text=%text:cunt=****%"
 set "text=%text:coon=****%"
-cd users
-if exist "%NAME%.ban" goto :BANNED
-if exist "%USERNAME%.ban" goto :BANNED
-cd ..
+if exist "users\%NAME%.ban" goto :BANNED
+if exist "users\%USERNAME%.ban" goto :BANNED
 @REM Commands
 if "%TEXT%"=="/help" goto :help
 if "%TEXT%"=="/info" goto :info
@@ -612,9 +642,9 @@ if NOT "%TEXT%"=="%TEXT:/promote=%" goto :PROMOTE
 if NOT "%TEXT%"=="%TEXT:/demote=%" goto :DEMOTE
 if "%TEXT%"=="/back" goto :UNNICK
 if "%TEXT%"=="/dino" goto :easter_ehg
-echo ^<%NICK%^> %TEXT% >> chat.log
+echo ^<%_fGreen%%NICK%%_RESET%^> %TEXT% >> chat.log
 set TEXT=
-echo Message sent
+echo %_fBGreen%Message sent%_RESET%
 timeout /t 2 /nobreak >nul
 goto :NCHAT
 
@@ -622,8 +652,8 @@ goto :NCHAT
 :unnick
 cls
 title unnick
-echo Nickname removed
-echo %DATE% %TIME% ^>^> %NICK% (%NAME%) Removed there nickname >>chat.log
+echo %_fRed%Nickname removed%_RESET%
+echo %_fblue%%DATE% %TIME% %_fRed%^>^> %_fGreen%%NICK%%_RESET% (%_fbgreen%%NAME%%_RESET%) Removed there nickname >>chat.log
 echo %DATE% %TIME% ^>^> %NICK% (*%NAME% (%USERNAME%)) Removed there nickname >>logs.log
 set NICK=%NAME%
 set /a NICKED=0
@@ -634,10 +664,10 @@ goto :CHAT
 
 :ban
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> %TEXT% >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
     cls
     echo ^>^>%TEXT%
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -649,9 +679,9 @@ set BAN=%TEXT%
 if "%BAN%"=="/ban" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -662,9 +692,9 @@ set BAN=%BAN:/ban =%
 if "%BAN%"=="" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -673,23 +703,19 @@ if "%BAN%"=="" (
 )
 cls
 set BAN=%BAN: =-%
-cd users
-if NOT EXIST "%BAN%.dll" goto :ACCNOTEXIST
-if EXIST "%BAN%.ban" goto :ALREADYBANNED
-cd ..
+if NOT EXIST "users\%BAN%.dll" goto :ACCNOTEXIST
+if EXIST "users\%BAN%.ban" goto :ALREADYBANNED
 color 4
 title %BAN:-= % has been banned
-echo ///////////////////
-echo /   USER BANNED   /
-echo ///////////////////
+echo %_bRed%%_fRed%///////////////////
+echo /%_bBlack%   USER BANNED   %_bRed%/
+echo ///////////////////%_RESET%
 echo 
 echo %DATE% %TIME% ^>^> *%BAN:-= % was banned by *%NAME% (%USERNAME%) >> logs.log
-echo %DATE% %TIME% ^>^> *%BAN:-= % was banned by %NAME% >> chat.log
+echo %_fblue%%DATE% %TIME% %_fRed%^>^> %_fbgreen%%BAN:-= %%_RESET% was banned by %_fbgreen%%NAME%%_RESET% >> chat.log
 set BAN=%BAN: =-%
-cd users
-echo %DATE% %TIME% ^>^> %BAN:-= % was banned by *%NAME% (%USERNAME%) >%BAN%.ban
-echo %BAN:-= % - Banned by *%NAME% (%USERNAME%) on %DATE% at %TIME%>>bans.log
-cd .. 
+echo %DATE% %TIME% ^>^> %BAN:-= % was banned by *%NAME% (%USERNAME%) >users\%BAN%.ban
+echo %BAN:-= % - Banned by *%NAME% (%USERNAME%) on %DATE% at %TIME%>>users\bans.log
 timeout /t 3 /nobreak >nul
 if %CHATASED%==1 goto :CHATASLOOP
 if %NICKED%==1 goto :NCHAT
@@ -699,10 +725,10 @@ goto :CHAT
 
 :unban
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> %TEXT% >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
     cls
     echo ^>^>%TEXT%
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -714,9 +740,9 @@ set UNBAN=%TEXT%
 if "%UNBAN%"=="/unban" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -727,9 +753,9 @@ set UNBAN=%UNBAN:/unban =%
 if "%UNBAN%"=="" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -738,23 +764,19 @@ if "%UNBAN%"=="" (
 )
 cls
 set UNBAN=%UNBAN: =-%
-cd users
-if NOT EXIST "%UNBAN%.dll" goto :ACCNOTEXIST
-if NOT EXIST "%UNBAN%.ban" goto :BANNOTEXIST
-cd ..
+if NOT EXIST "users\%UNBAN%.dll" goto :ACCNOTEXIST
+if NOT EXIST "users\%UNBAN%.ban" goto :BANNOTEXIST
 title %UNBAN:-= % has been unbanned
-echo /////////////////////
-echo /   USER UNBANNED   /
-echo /////////////////////
+echo %_bRed%%_fRed%/////////////////////
+echo /%_bBlack%   USER UNBANNED   %_bRed%/
+echo /////////////////////%_RESET%
 echo 
 echo %DATE% %TIME% ^>^> *%UNBAN:-= % was unbanned by *%NAME% (%USERNAME%) >> logs.log
-echo %DATE% %TIME% ^>^> *%UNBAN:-= % was unbanned by %NAME% >> chat.log
-cd users
-del /q "%UNBAN%.ban"
+echo %_fblue%%DATE% %TIME% %_fRed%^>^> %_fbgreen%%UNBAN:-= %%_RESET% was unbanned by %_fbgreen%%NAME%%_RESET% >> chat.log
+del /q "users\%UNBAN%.ban"
 set UNBAN=%UNBAN:-= %
-findstr /V /I /R /C:"^%UNBAN%\>" "bans.log" > "new_bans.log"
-move /Y "new_bans.log" "bans.log">nul
-cd ..
+findstr /V /I /R /C:"^%UNBAN%\>" "users\bans.log" > "users\new_bans.log"
+move /Y "users\new_bans.log" "users\bans.log">nul
 timeout /t 3 /nobreak >nul
 if %CHATASED%==1 goto :CHATASLOOP
 if %NICKED%==1 goto :NCHAT
@@ -764,10 +786,10 @@ goto :CHAT
 
 :PCBAN
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> %TEXT% >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
     cls
     echo ^>^>%TEXT%
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -779,9 +801,9 @@ set PCBAN=%TEXT%
 if "%PCBAN%"=="/pcban" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -792,9 +814,9 @@ set PCBAN=%PCBAN:/pcban =%
 if "%PCBAN%"=="" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -802,20 +824,16 @@ if "%PCBAN%"=="" (
     goto :CHAT
 )
 cls
-cd users
-if EXIST "%PCBAN%.ban" goto :ALREADYBANNED
-cd ..
+if EXIST "users\%PCBAN%.ban" goto :ALREADYBANNED
 title %PCBAN% has been pc banned
-echo /////////////////////
-echo /   USER PCBANNED   /
-echo /////////////////////
+echo %_bRed%%_fRed%/////////////////////
+echo /%_bBlack%   USER PCBANNED   %_bRed%/
+echo /////////////////////%_RESET%
 echo 
 echo %DATE% %TIME% ^>^> %PCBAN% was pc banned by *%NAME% (%USERNAME%) >> logs.log
-echo %DATE% %TIME% ^>^> %PCBAN% was pc banned by %NAME% >> chat.log
-cd users
+echo %_fblue%%DATE% %TIME% %_fRed%^>^> %_fbgreen%%PCBAN%%_RESET% was pc banned by %_fbgreen%%NAME%%_RESET% >> chat.log
 set PCBAN=%PCBAN: =-%
-echo %DATE% %TIME% ^>^> %PCBAN% was pc banned by *%NAME% (%USERNAME%) >%PCBAN%.ban
-cd ..
+echo %DATE% %TIME% ^>^> %PCBAN% was pc banned by *%NAME% (%USERNAME%) >users\%PCBAN%.ban
 timeout /t 3 /nobreak >nul
 if %CHATASED%==1 goto :CHATASLOOP
 if %NICKED%==1 goto :NCHAT
@@ -825,10 +843,10 @@ goto :CHAT
 
 :UNPCBAN
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> %TEXT% >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
     cls
     echo ^>^>%TEXT%
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -840,9 +858,9 @@ set UNPCBAN=%TEXT%
 if "%UNPCBAN%"=="/UNPCBAN" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -853,30 +871,26 @@ set UNPCBAN=%UNPCBAN:/UNPCBAN =%
 if "%UNPCBAN%"=="" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-cd users
-if NOT EXIST "%UNPCBAN%.ban" goto :BANNOTEXIST
-cd ..
+if NOT EXIST "users\%UNPCBAN%.ban" goto :BANNOTEXIST
 cls
 title %UNPCBAN% Has been unpcbanned
-echo ///////////////////////
-echo /   USER UNPCBANNED   /
-echo ///////////////////////
+echo %_bRed%%_fRed%///////////////////////
+echo /%_bBlack%   USER UNPCBANNED   %_bRed%/
+echo ///////////////////////%_RESET%
 echo 
 echo %DATE% %TIME% ^>^> %UNPCBAN% was pc unbanned by *%NAME% (%USERNAME%) >> logs.log
-echo %DATE% %TIME% ^>^> %UNPCBAN% was pc unbanned by %NAME% >> chat.log
-cd users
+echo %_fblue%%DATE% %TIME% %_fRed%^>^> %_fbgreen%%UNPCBAN%%_RESET% was pc unbanned by %_fbgreen%%NAME%%_RESET% >> chat.log
 set UNPCBAN=%UNPCBAN: =-%
-del /q "%UNPCBAN%.ban"
-cd ..
+del /q "users\%UNPCBAN%.ban"
 timeout /t 3 /nobreak >nul
 if %CHATASED%==1 goto :CHATASLOOP
 if %NICKED%==1 goto :NCHAT
@@ -884,16 +898,15 @@ goto :CHAT
 
 
 :ACCNOTEXIST
-cd ..
 cls
 title Account does not exist
 color 4
-echo ////////////////////////
-echo /   ACCOUNT DOES NOT   /
-echo /        EXIST         /
-echo ////////////////////////
+echo %_bRed%%_fRed%////////////////////////
+echo /%_bBlack%   ACCOUNT DOES NOT   %_bRed%/
+echo /%_bBlack%        EXIST         %_bRed%/
+echo ////////////////////////%_RESET%
 echo 
-echo Please enter an account name that exists.
+echo %_fGreen%Please enter an account name that exists.%_RESET%
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) tried to ban or unban an account that does not exist>>logs.log
 timeout /t 3 /nobreak >nul
 if %NICKED%==1 goto :NCHAT
@@ -902,16 +915,16 @@ if %CHATASED%==1 goto :CHATASLOOP
 
 
 :BANNOTEXIST
-cd ..
+
 cls
 title User is not banned
 color 4
-echo ///////////////////
-echo /   USER IS NOT   /
-echo /      BANNED     /
-echo ///////////////////
+echo %_bRed%%_fRed%///////////////////
+echo /%_bBlack%   USER IS NOT   %_bRed%/
+echo /%_bBlack%      BANNED     %_bRed%/
+echo ///////////////////%_RESET%
 echo 
-echo Please enter the name of someone who is banned.
+echo %_fGreen%Please enter the name of someone who is banned.%_RESET%
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) tried to unban an account that is not banned>>logs.log
 timeout /t 3 /nobreak >nul
 if %NICKED%==1 goto :NCHAT
@@ -920,16 +933,15 @@ if %CHATASED%==1 goto :CHATASLOOP
 
 
 :ALREADYBANNED
-cd ..
 cls
 title User is already banned
 color 4
-echo ///////////////////////
-echo /   USER IS ALREADY   /
-echo /       BANNED        /
-echo ///////////////////////
+echo %_bRed%%_fRed%///////////////////////
+echo /%_bBlack%   USER IS ALREADY   %_bRed%/
+echo /%_bBlack%       BANNED        %_bRed%/
+echo ///////////////////////%_RESET%
 echo 
-echo Please enter the name of someone who is not already banned.
+echo %_fGreen%Please enter the name of someone who is not already banned.%_RESET%
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) tried to ban an account that is already banned>>logs.log
 timeout /t 3 /nobreak >nul
 if %NICKED%==1 goto :NCHAT
@@ -941,9 +953,9 @@ if %CHATASED%==1 goto :CHATASLOOP
 cls
 color 4
 title BANNED
-echo ////////////////////////////
-echo /   YOU HAVE BEEN BANNED   /
-echo ////////////////////////////
+echo %_bRed%%_fRed%////////////////////////////
+echo /%_bBlack%   YOU HAVE BEEN BANNED   %_bRed%/
+echo ////////////////////////////%_RESET%
 echo.
 echo go away
 echo 
@@ -954,10 +966,10 @@ exit
 
 :TERMINATE
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> %TEXT% >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
     cls
     echo ^>^>%TEXT%
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -969,9 +981,9 @@ set TERMINATEACC=%TEXT%
 if "%TERMINATEACC%"=="/terminate" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -982,9 +994,9 @@ set TERMINATEACC=%TERMINATEACC:/terminate =%
 if "%TERMINATEACC%"=="" (
     cls
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -995,16 +1007,14 @@ cls
 set TERMINATEACC=%TERMINATEACC: =-%
 title /terminate
 color 4
-cd users
-if NOT EXIST "%TERMINATEACC%.dll" (
+if NOT EXIST "users\%TERMINATEACC%.dll" (
 
     cls
     title %TERMINATEACC%.dll NOT FOUND
-    echo //////////////////////////////
-    echo /   ACCOUNT DOES NOT EXIST   /
-    echo //////////////////////////////
+    echo %_bRed%%_fRed%//////////////////////////////
+    echo /%_bBlack%   ACCOUNT DOES NOT EXIST   %_bRed%/
+    echo //////////////////////////////%_RESET%
     echo 
-    cd ..
     echo %DATE% %TIME% ^>^> *%NAME% ^(%USERNAME%^) tried to delete an account that does not exist >> logs.log
     TIMEOUT /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -1014,16 +1024,15 @@ if NOT EXIST "%TERMINATEACC%.dll" (
 
 cls
 title DELETING %TERMINATEACC%.dll
-echo ////////////////////////
-echo /   DELETING ACCOUNT   /
-echo ////////////////////////
+echo %_bRed%%_fRed%////////////////////////
+echo /%_bBlack%   DELETING ACCOUNT   %_bRed%/
+echo ////////////////////////%_RESET%
 echo 
 TIMEOUT /t 2 /nobreak >nul
-del /q %TERMINATEACC%.dll
-cd ..
+del /q users\%TERMINATEACC%.dll
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Terminated account "*%TERMINATEACC%" >> logs.log
 title %TERMINATEACC%.dll Successfully deleted
-echo %TERMINATEACC%.dll has been deleted.
+echo %_fbgreen%%TERMINATEACC%.dll%_RESET% has been %_fRed%deleted%_RESET%.
 TIMEOUT /t 3 >nul
 if %CHATASED%==1 goto :CHATASLOOP
 if %NICKED%==1 goto :NCHAT
@@ -1035,10 +1044,10 @@ goto :CHAT
 cls
 color 4
 title /changepassword
-echo /////////////////////////////////////
-echo /        ARE YOU SURE YOU           /
-echo /   WANT TO CHANGE YOUR PASSWORD?   /
-echo /////////////////////////////////////
+echo %_bRed%%_fRed%/////////////////////////////////////
+echo /%_bBlack%        ARE YOU SURE YOU           %_bRed%/
+echo /%_bBlack%   WANT TO CHANGE YOUR PASSWORD?   %_bRed%/
+echo /////////////////////////////////////%_RESET%
 echo 
 choice
 if %ERRORLEVEL%==2 (
@@ -1048,9 +1057,9 @@ if %ERRORLEVEL%==2 (
 )
 cls
 color 7
-echo /////////////////////////////////////
-echo /   PLEASE ENTER CURRENT PASSWORD   /
-echo /////////////////////////////////////
+echo %_bbGreen%%_fbgreen%/////////////////////////////////////
+echo /%_RESET%   PLEASE ENTER CURRENT PASSWORD   %_bbGreen%%_fbgreen%/
+echo /////////////////////////////////////%_RESET%
 echo.
 set "psCommand=powershell -Command "$pword = read-host 'Password' -AsSecureString ; ^
      $BSTR=[System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pword); ^
@@ -1077,8 +1086,7 @@ set "C_PASSWORD=%C_PASSWORD: =_%"
 
 setlocal disabledelayedexpansion
 
-cd users
-findstr /I /R /C:"^p\>" "%NAME%.dll">%TEMP%\CHATCHANGEPW.tmp
+findstr /I /R /C:"^p\>" "users\%NAME%.dll">%TEMP%\CHATCHANGEPW.tmp
 set /p password_file=<%TEMP%\CHATCHANGEPW.tmp
 del %TEMP%\CHATCHANGEPW.tmp
 set password_file=%password_file:p!=%
@@ -1089,11 +1097,10 @@ goto :WRONG_PASSWORD
 cls
 color 4
 title Incorrect password
-echo //////////////////////
-echo /   WRONG PASSWORD   /
-echo //////////////////////
+echo %_bRed%%_fRed%//////////////////////
+echo /%_bBlack%   WRONG PASSWORD   %_bRed%/
+echo //////////////////////%_RESET%
 echo 
-cd ..
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) entered the current password wrong when trying to change it >>logs.log
 timeout /t 3 /nobreak >nul
 if %CHATASED%==1 goto :CHATASLOOP
@@ -1103,9 +1110,9 @@ goto :CHAT
 :CORRECT_PASSWORD
 cls
 title Enter new password
-echo //////////////////////////
-echo /   ENTER NEW PASSWORD   /
-echo //////////////////////////
+echo %_bBGreen%%_fbgreen%//////////////////////////
+echo /%_RESET%   ENTER NEW PASSWORD   %_bbGreen%%_fbgreen%/
+echo //////////////////////////%_RESET%
 echo.
 set "psCommand=powershell -Command "$pword = read-host 'New Password' -AsSecureString ; ^
      $BSTR=[System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pword); ^
@@ -1119,9 +1126,9 @@ if "%NEW_PASSWORD%" NEQ "%CONFIRM_PASS%" (
     cls
     title Passwords do not match
     color 4
-    echo /////////////////////////////
-    echo /   PASSWORDS DON'T MATCH   /
-    echo /////////////////////////////
+    echo %_bRed%%_fRed%/////////////////////////////
+    echo /%_bBlack%   PASSWORDS DON'T MATCH   %_bRed%/
+    echo /////////////////////////////%_RESET%
     echo 
     timeout /t 3 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -1150,15 +1157,14 @@ set "NEW_PASSWORD=%NEW_PASSWORD: =_%"
 setlocal disabledelayedexpansion
 
 echo p!%NEW_PASSWORD%>%NAME%.dll
-if "%ADMIN%"=="TRUE" echo a!TRUE>>%NAME%.dll
-if "%ADMIN%"=="FALSE" echo a!FALSE>>%NAME%.dll
-cd ..
+if "%ADMIN%"=="TRUE" echo a!TRUE>>users\%NAME%.dll
+if "%ADMIN%"=="FALSE" echo a!FALSE>>users\%NAME%.dll
 cls
 title password changed successfully
 color 2
-echo ////////////////////////
-echo /   PASSWORD CHANGED   /
-echo ////////////////////////
+echo %_fbgreen%%_bBGreen%////////////////////////
+echo /%_RESET%   PASSWORD CHANGED   %_bbGreen%%_fbgreen%/
+echo ////////////////////////%_RESET%
 echo.
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Changed there password >>logs.log
 timeout /t 3 /nobreak >nul
@@ -1172,10 +1178,10 @@ goto :CHAT
 cls
 color 4
 title /deleteaccount
-echo ///////////////////////////////
-echo /    ARE YOU SURE YOU WANT    /
-echo /   TO DELETE YOUR ACCOUNT?   /
-echo ///////////////////////////////
+echo %_bRed%%_fRed%///////////////////////////////
+echo /%_bBlack%    ARE YOU SURE YOU WANT    %_bRed%/
+echo /%_bBlack%   TO DELETE YOUR ACCOUNT?   %_bRed%/
+echo ///////////////////////////////%_RESET%
 echo 
 choice
 if %ERRORLEVEL%==2 (
@@ -1184,17 +1190,16 @@ if %ERRORLEVEL%==2 (
     if %CHATASED%==1 goto :CHATASLOOP
 )
 cls
-echo //////////////////////////////////////////
-echo /   PLEASE ENTER YOUR CURRENT PASSWORD   /
-echo //////////////////////////////////////////
+echo %_bbGreen%%_fbgreen%//////////////////////////////////////////
+echo /%_RESET%   PLEASE ENTER YOUR CURRENT PASSWORD   %_bbGreen%%_fbgreen%/
+echo //////////////////////////////////////////%_RESET%
 echo.
 set "psCommand=powershell -Command "$pword = read-host 'Password' -AsSecureString ; ^
      $BSTR=[System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pword); ^
            [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)""
 for /f "usebackq delims=" %%p in (`%psCommand%`) do set DELCURRENTPASSWORD=%%p
-cd users
 set DELNAME=%NAME: =-%
-findstr /I /R /C:"^p\>" "%DELNAME%.dll">%TEMP%\CHATDELPW.tmp
+findstr /I /R /C:"^p\>" "users\%DELNAME%.dll">%TEMP%\CHATDELPW.tmp
 set /p DELPASSWORD=<%TEMP%\CHATDELPW.tmp
 del %TEMP%\CHATDELPW.tmp
 set DELPASSWORD=%DELPASSWORD:p!=%
@@ -1221,9 +1226,9 @@ setlocal disabledelayedexpansion
 if NOT %DELCURRENTPASSWORD%==%DELPASSWORD% (
     cls
     title Incorrect password
-    echo /////////////////////
-    echo /   WRONG PASWORD   /
-    echo /////////////////////
+    echo %_bRed%%_fRed%/////////////////////
+    echo /%_bBlack%   WRONG PASWORD   %_bRed%/
+    echo /////////////////////%_RESET%
     echo 
     timeout /t 3 /nobreak >nul
     if %NICKED%==1 goto :NCHAT
@@ -1232,16 +1237,15 @@ if NOT %DELCURRENTPASSWORD%==%DELPASSWORD% (
 )
 cls
 title deleting account...
-echo ////////////////////////
-echo /   DELETING ACCOUNT   /
-echo ////////////////////////
+echo %_bRed%%_fRed%////////////////////////
+echo /%_bBlack%   DELETING ACCOUNT   %_bRed%/
+echo ////////////////////////%_RESET%
 echo.
 timeout /t 3 /nobreak >nul
-del /q %DELNAME%.dll
-cd ..
+del /q users\%DELNAME%.dll
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) deleted there account>>logs.log
-echo Account delete.
-echo It was nice having you around :)
+echo %_fGreen%Account delete.
+echo %_fblue%It was nice having you around :)%_RESET%
 title Account deleted
 timeout /t 2 /nobreak >nul
 echo. >%TEMP%\CHATLOGOUT.tmp
@@ -1251,10 +1255,10 @@ exit
 
 :BANLIST
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> %TEXT% >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
     cls
     echo ^>^>%TEXT%
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -1263,16 +1267,15 @@ if "%ADMIN%" NEQ "TRUE" (
 cls
 title banlist
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Checked the ban list>>logs.log
-cd users
 :BANLISTLOOP
 cls
-echo Currently banned accounts:
+echo %_fGreen%Currently banned accounts:%_RESET%
 echo.
-type bans.log
+type users\bans.log
 echo.
 echo.
-echo Press any key to go back
-echo Press "r" to refresh
+echo %_fgreen%Press any key to go back
+echo Press %_bBWhite%%_fBlack%"r"%_RESET%%_fgreen% to refresh
 choice /c r1234567890qwetyuiopasdfghjklzxcvbnm >nul
 if %ERRORLEVEL%==1 goto :BANLISTLOOP
 if %CHATASED%==1 goto :CHATASLOOP
@@ -1283,10 +1286,10 @@ goto :CHAT
 
 :debug
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> %TEXT% >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
     cls
     echo ^>^>%TEXT%
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -1296,9 +1299,9 @@ cls
 cd ..
 if EXIST debug.bat (
     color 4
-    echo //////////////////////
-    echo /   DEBUG MODE OFF   /
-    echo //////////////////////
+    echo %_bbGreen%%_fbgreen%//////////////////////
+    echo /%_RESET%   DEBUG MODE OFF   %_bbGreen%%_fbgreen%/
+    echo //////////////////////%_RESET%
     echo.
     del debug.bat
     cd info
@@ -1309,9 +1312,9 @@ if EXIST debug.bat (
     goto :CHAT
 )
 color 2
-echo /////////////////////
-echo /   DEBUG MODE ON   /
-echo /////////////////////
+echo %_bbGreen%%_fbgreen%/////////////////////
+echo /%_RESET%   DEBUG MODE ON   %_bbGreen%%_fbgreen%/
+echo /////////////////////%_RESET%
 echo.
 echo @echo off>>debug.bat
 echo echo. ^>debug>>debug.bat
@@ -1331,10 +1334,10 @@ exit
 
 :PROMOTE
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> %TEXT%% >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT%% >> chat.log
     cls
     echo ^>^>%TEXT%
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -1347,9 +1350,9 @@ if "%PROMOTE%"=="/promote" (
     cls
     title /promote
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -1361,33 +1364,31 @@ if "%PROMOTE%"=="" (
     cls
     title /promote
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-cd users
-if NOT EXIST "%PROMOTE: =-%.dll" (
+if NOT EXIST "users\%PROMOTE: =-%.dll" (
 
     cls
     color 4
     title %PROMOTE: =-%.dll NOT FOUND
-    echo //////////////////////////////
-    echo /   ACCOUNT DOES NOT EXIST   /
-    echo //////////////////////////////
+    echo %_bRed%%_fRed%//////////////////////////////
+    echo /%_bBlack%   ACCOUNT DOES NOT EXIST   %_bRed%/
+    echo //////////////////////////////%_RESET%
     echo 
-    cd ..
     echo %DATE% %TIME% ^>^> *%NAME% ^(%USERNAME%^) tried to promote an account that does not exist >> logs.log
     TIMEOUT /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-findstr /I /R /C:"^a\>" "%PROMOTE%.dll">%TEMP%\ADMINCH.tmp
+findstr /I /R /C:"^a\>" "users\%PROMOTE%.dll">%TEMP%\ADMINCH.tmp
 set /p ADMINCH=<%TEMP%\ADMINCH.tmp
 del %TEMP%\ADMINCH.tmp
 set ADMINCH=%ADMINCH:a!=%
@@ -1395,11 +1396,10 @@ if "%ADMINCH%"=="TRUE" (
     cls
     color 4
     title %PROMOTE% ALREADY IS AN ADMIN
-    echo ////////////////////////////////
-    echo /   USER ALREADY IS AN ADMIN   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   USER ALREADY IS AN ADMIN   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
-    cd ..
     echo %DATE% %TIME% ^>^> *%NAME% ^(%USERNAME%^) Tried to promote %PROMOTE% but they where alreday an admin >>logs.log
     TIMEOUT /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -1408,12 +1408,12 @@ if "%ADMINCH%"=="TRUE" (
 )
 cls
 title /promote %PROMOTE%
-echo /////////////////////////////
-echo /   ARE YOU SURE YOU WANT   /
-echo /   TO PROMOTE THIS USER?   /
-echo /////////////////////////////
+echo %_bRed%%_fRed%/////////////////////////////
+echo /%_bBlack%   ARE YOU SURE YOU WANT   %_bRed%/
+echo /%_bBlack%   TO PROMOTE THIS USER?   %_bRed%/
+echo /////////////////////////////%_RESET%
 echo.
-echo If you promote %PROMOTE% they will have full access to all admin commands.
+echo If you promote %_fbgreen%%PROMOTE%%_RESET% they will have %_fRed%full%_RESET% access to %_fRed%all admin commands%_RESET%.
 choice
 if %ERRORLEVEL%==2 (
     if %CHATASED%==1 goto :CHATASLOOP
@@ -1421,17 +1421,16 @@ if %ERRORLEVEL%==2 (
     goto :CHAT
 )
 set PROMOTE=%PROMOTE: =-%
-findstr /V /I /R /C:"^a\>" "%PROMOTE%.dll" > "%PROMOTE%.dll.tmp"
-move /Y "%PROMOTE%.dll.tmp" "%PROMOTE%.dll">nul
-echo a!TRUE>>%PROMOTE%.dll
-cd ..
+findstr /V /I /R /C:"^a\>" "users\%PROMOTE%.dll" > "users\%PROMOTE%.dll.tmp"
+move /Y "users\%PROMOTE%.dll.tmp" "users\%PROMOTE%.dll">nul
+echo a!TRUE>>users\%PROMOTE%.dll
 color 2
 cls
-echo ////////////////////////
-echo /   ACCOUNT PROMOTED   /
-echo ////////////////////////
+echo %_bbGreen%%_fbgreen%////////////////////////
+echo /%_RESET%   ACCOUNT PROMOTED   %_bbGreen%%_fbgreen%/
+echo ////////////////////////%_RESET%
 echo.
-echo The account "%PROMOTE:-= %" has been granted admin permissions!
+echo The account "%_fbgreen%%PROMOTE:-= %%_RESET%" has been granted %_fRed%admin%_RESET% permissions!
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Promoted %PROMOTE%>>logs.log
 timeout /t 3 /nobreak >nul
 if %CHATASED%==1 goto :CHATASLOOP
@@ -1441,10 +1440,10 @@ goto :CHAT
 
 :DEMOTE
 if "%ADMIN%" NEQ "TRUE" (
-    echo ^<%NAME%^> %TEXT%% >> chat.log
+    echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT%% >> chat.log
     cls
     echo ^>^>%TEXT%
-    echo Message sent
+    echo %_fBGreen%Message sent%_RESET%
     timeout /t 2 /nobreak >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
@@ -1457,9 +1456,9 @@ if "%DEMOTE%"=="/demote" (
     cls
     title /demote
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -1471,33 +1470,31 @@ if "%DEMOTE%"=="" (
     cls
     title /demote
     color 4
-    echo ////////////////////////////////
-    echo /   YOU MUST ENTER SOMETHING   /
-    echo ////////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////////
+    echo /%_bBlack%   YOU MUST ENTER SOMETHING   %_bRed%/
+    echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-cd users
-if NOT EXIST "%DEMOTE: =-%.dll" (
+if NOT EXIST "users\%DEMOTE: =-%.dll" (
 
     cls
     color 4
     title %DEMOTE: =-%.dll NOT FOUND
-    echo //////////////////////////////
-    echo /   ACCOUNT DOES NOT EXIST   /
-    echo //////////////////////////////
+    echo %_bRed%%_fRed%//////////////////////////////
+    echo /%_bBlack%   ACCOUNT DOES NOT EXIST   %_bRed%/
+    echo //////////////////////////////%_RESET%
     echo 
-    cd ..
     echo %DATE% %TIME% ^>^> *%NAME% ^(%USERNAME%^) tried to demote an account that does not exist >> logs.log
     TIMEOUT /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-findstr /I /R /C:"^a\>" "%DEMOTE%.dll">%TEMP%\ADMINCH.tmp
+findstr /I /R /C:"^a\>" "users\%DEMOTE%.dll">%TEMP%\ADMINCH.tmp
 set /p ADMINCH=<%TEMP%\ADMINCH.tmp
 del %TEMP%\ADMINCH.tmp
 set ADMINCH=%ADMINCH:a!=%
@@ -1505,11 +1502,10 @@ if "%ADMINCH%"=="FALSE" (
     cls
     color 4
     title %DEMOTE% ALREADY IS NOT AN ADMIN
-    echo ////////////////////////////
-    echo /   USER IS NOT AN ADMIN   /
-    echo ////////////////////////////
+    echo %_bRed%%_fRed%////////////////////////////
+    echo /%_bBlack%   USER IS NOT AN ADMIN   %_bRed%/
+    echo ////////////////////////////%_RESET%
     echo 
-    cd ..
     echo %DATE% %TIME% ^>^> *%NAME% ^(%USERNAME%^) Tried to demote %DEMOTE% but they where not an admin >>logs.log
     TIMEOUT /t 3 >nul
     if %CHATASED%==1 goto :CHATASLOOP
@@ -1518,12 +1514,12 @@ if "%ADMINCH%"=="FALSE" (
 )
 cls
 title /demote %DEMOTE%
-echo /////////////////////////////
-echo /   ARE YOU SURE YOU WANT   /
-echo /   TO DEMOTE THIS USER?    /
-echo /////////////////////////////
+echo %_bRed%%_fRed%/////////////////////////////
+echo /%_bBlack%   ARE YOU SURE YOU WANT   %_bRed%/
+echo /%_bBlack%   TO DEMOTE THIS USER?    %_bRed%/
+echo /////////////////////////////%_RESET%
 echo.
-echo If you demote %DEMOTE% they loose access to all admin commands.
+echo If you demote %_fbgreen%%DEMOTE%%_RESET% they loose access to %_fRed%all admin commands%_RESET%.
 choice
 if %ERRORLEVEL%==2 (
     if %CHATASED%==1 goto :CHATASLOOP
@@ -1531,17 +1527,16 @@ if %ERRORLEVEL%==2 (
     goto :CHAT
 )
 set DEMOTE=%DEMOTE: =-%
-findstr /V /I /R /C:"^a\>" "%DEMOTE%.dll" > "%DEMOTE%.dll.tmp"
-move /Y "%DEMOTE%.dll.tmp" "%DEMOTE%.dll">nul
-echo a!FALSE>>%DEMOTE%.dll
-cd ..
+findstr /V /I /R /C:"^a\>" "users\%DEMOTE%.dll" > "users\%DEMOTE%.dll.tmp"
+move /Y "users\%DEMOTE%.dll.tmp" "users\%DEMOTE%.dll">nul
+echo a!FALSE>>users\%DEMOTE%.dll
 color 4
 cls
-echo ////////////////////////
-echo /   ACCOUNT DEMOTED    /
-echo ////////////////////////
+echo %_bbGreen%%_fbgreen%////////////////////////
+echo /%_RESET%   ACCOUNT DEMOTED    %_bbGreen%%_fbgreen%/
+echo ////////////////////////%_RESET%
 echo.
-echo The account "%DEMOTE:-= %" has had their admin permissions revoked!
+echo The account "%_fbgreen%%DEMOTE:-= %%_RESET%" has had their admin permissions %_fRed%revoked%_RESET%!
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Demoted %DEMOTE%>>logs.log
 timeout /t 3 /nobreak >nul
 if %CHATASED%==1 goto :CHATASLOOP
