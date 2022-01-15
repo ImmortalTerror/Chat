@@ -153,6 +153,7 @@ pause>nul
 
 
 
+@REM Asks if you already have an account
 :ACCOUNTEXIST
 cls
 mode CON: COLS=48 LINES=11
@@ -178,6 +179,7 @@ exit
 
 
 
+@REM Page to login
 :LOGIN
 cls
 title LOGIN - /back to go back to dashboard
@@ -194,10 +196,19 @@ if "%NAME%"=="/back" (
     cd ..
     goto :START
 )
-set "NAME=%NAME: =-%"
-if exist "%NAME%.ban" goto :BAN
+echo %NAME%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_NAME=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+@REM Checks if user is banned
+if exist "%h_NAME%.ban" goto :BAN
 if exist "%USERNAME%.ban" goto :BAN
-if exist "%NAME%.dll" goto :PASSWORD
+if exist "%h_NAME%.dll" goto :PASSWORD
+
+@REM If the username is not found
 cls
 color 4
 echo %_fRed%%_bRed%//////////////////////////
@@ -210,6 +221,7 @@ cd users
 timeout /t 3 >nul
 goto :LOGIN
 
+@REM Prompt for password if account exists
 :PASSWORD
 set "psCommand=powershell -Command "$pword = read-host 'Password' -AsSecureString ; ^
      $BSTR=[System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pword); ^
@@ -223,48 +235,47 @@ if "%password%"=="/back" (
 
 
 
-findstr /I /R /C:"^p\>" "%NAME%.dll">%TEMP%\CHATPW.tmp
-set /p password_file=<%TEMP%\CHATPW.tmp
-del %TEMP%\CHATPW.tmp
-set password_file=%password_file:p!=%
+@REM Gets password from account file
+set /p password_file=<%h_NAME%.dll
 
 
 
-setlocal enabledelayedexpansion
+@REM Hashes inputed password
+echo %password%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_password=<%temp%\hashoutput.tmp
 
-set inputcode=9375
-set code=%password%
-set chars=0123456789abcdefghijklmnopqrstuvwxyz
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
 
-for /L %%N in (10 1 36) do (
-    for /F %%C in ("!chars:~%%N,1!") do (
-        set /a MATH=%%N*%inputcode%
-        for /f %%F in ("!MATH!") do (
-            set "code=!code:%%C=-%%F!"
-        )
-    )
+
+
+@REM Gets admin status
+FOR /F "skip=1" %%c IN (%h_NAME%.dll) DO set f_ADMINCH=%%c
+
+set h_ADMINCH=8Fas3%h_NAME%onRG621
+
+echo %h_ADMINCH%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_ADMINCH=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+if %f_ADMINCH%==%h_ADMINCH% (
+    set ADMINCH=TRUE
+) ELSE (
+    set ADMINCH=FALSE
 )
 
-set enpassword=!code!
-set "enpassword=%enpassword: =_%"
-
-setlocal disabledelayedexpansion
 
 
-
-findstr /I /R /C:"^a\>" "%NAME%.dll">%TEMP%\ADMINCH.tmp
-set /p ADMINCH=<%TEMP%\ADMINCH.tmp
-del %TEMP%\ADMINCH.tmp
-set ADMINCH=%ADMINCH:a!=%
+@REM If password is correct
+if %password_file%==%h_password% goto correct_credentials
 
 
 
-if %password_file%==%enpassword% goto correct_credentials
-
-goto incorrect_credentials
-
-
-
+@REM If password is incorrect
 :incorrect_credentials
 cls
 color 4
@@ -278,6 +289,7 @@ cd users
 timeout /t 3 >nul
 goto login
 
+@REM Correct password
 :correct_credentials
 cd ..
 echo %DATE% %TIME% ^>^> %USERNAME% Has logged into *%NAME% >>logs.log
@@ -286,6 +298,7 @@ goto :RULES
 
 
 
+@REM Page to make an account
 :ACCOUNTMAKE
 cls
 title LOGIN - /back to go back to dashboard
@@ -302,9 +315,18 @@ if "%new_NAME%"=="/back" (
     cd ..
     goto :START
 )
-set "new_NAME=%new_NAME: =-%"
-if exist "%new_NAME%.dll" goto :ALREADYEXIST
 
+@REM Hashes name
+echo %new_NAME%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_new_NAME=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+if exist "%h_new_NAME%.dll" goto :ALREADYEXIST
+
+@REM Enter new password
 :NEWPASSWORD
 cls
 color 7
@@ -333,40 +355,48 @@ for /f "usebackq delims=" %%p in (`%psCommand%`) do set confirm_new_password=%%p
 
 if "%new_password%"=="%confirm_new_password%" goto :PASSWORDSMATCH
 
+@REM If passwordds don't match
 cls
 color 4
 echo %_bRed%%_fRed%//////////////////////////////
 echo /%_RESET%   %_fRed%PASSWORD'S DON'T MATCH   %_fRed%%_bRed%/
 echo //////////////////////////////%_RESET%
 echo 
-timeout /t 3>nul
+timeout /t 3 /nobreak>nul
 set new_password=
 set confirm_new_password=
 goto :NEWPASSWORD
 
+@REM If passwords match
 :PASSWORDSMATCH
 
-setlocal enabledelayedexpansion
+@REM Hashes password
+echo %new_password%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p new_password=<%temp%\hashoutput.tmp
 
-set inputcode=9375
-set code=%new_password%
-set chars=0123456789abcdefghijklmnopqrstuvwxyz
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
 
-for /L %%N in (10 1 36) do (
-    for /F %%C in ("!chars:~%%N,1!") do (
-        set /a MATH=%%N*%inputcode%
-        for /f %%F in ("!MATH!") do (
-            set "code=!code:%%C=-%%F!"
-        )
-    )
-)
-set new_password=!code!
-set "new_password=%new_password: =_%"
-setlocal disabledelayedexpansion
 
-echo p!%new_password% >"%new_NAME%".dll
-echo a!FALSE>>"%new_NAME%".dll
 
+@REM Gets username and adds salt to make hashed admin status
+set n_ADMIN_STATUS=73Hs%new_NAME%gGG83A
+
+echo %n_ADMIN_STATUS%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_n_ADMIN_STATUS=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+
+
+@REM Makes account file
+echo %new_password%>"%h_new_NAME%".dll
+echo %h_n_ADMIN_STATUS%>>"%h_new_NAME%".dll
+
+@REM Tells user account has been made
 echo.
 echo %_fGreen%Account Successfully Created!%_RESET%
 cd ..
@@ -378,6 +408,7 @@ goto :LOGIN
 
 
 
+@REM If account already exists
 :ALREADYEXIST
 cls
 color 4
@@ -391,7 +422,7 @@ goto :ACCOUNTMAKE
 
 
 
-@REM rules
+@REM Rules
 :RULES
 mode CON: COLS=100 LINES=15
 cls
@@ -417,7 +448,7 @@ cls
 color 7
 if %DEBUG%==0 cd ..
 if %DEBUG%==1 cd info
-start cmd /c "type.bat" 1 %NAME% %ADMINCH%
+start cmd /c "type.bat" 1 %NAME% %ADMINCH% %h_NAME% %h_ADMINCH%
 title Chat
 :CHAT
 if EXIST "%TEMP%\CHATLOGOUT.tmp" (
@@ -452,6 +483,7 @@ timeout /t 3 /nobreak >nul
 exit
 
 
+@REM Pc banned page
 :BANALT
 cd ..
 echo %DATE% %TIME% ^>^> %USERNAME% Tried to login but is pc banned. >>logs.log
@@ -460,6 +492,7 @@ exit
 
 
 
+@REM First time setup
 :FIRSTTIMESETUP
 cls
 color 7
@@ -480,15 +513,26 @@ cd users
 mode CON: COLS=48 LINES=11
 goto :ACCOUNTMAKE
 
+@REM First time setup completed
 :FTSU2
 mode CON: COLS=125 LINES=30
 color 7
 cls
 title Admin account made!
 color 2
-findstr /V /I /R /C:"^a\>" "%new_Name%.dll" > "%new_Name%.dll.tmp"
-move /Y "%new_Name%.dll.tmp" "%new_Name%.dll">nul
-echo a!TRUE>>%new_Name%.dll
+set /p new_admin_password=<%h_new_Name%.dll
+echo %new_admin_password%>%h_new_Name%.dll.tmp
+move /Y "%h_new_Name%.dll.tmp" "%h_new_Name%.dll">nul
+
+set NEW_ADMIN_STATUS=8Fas3%h_new_NAME%onRG621
+echo %NEW_ADMIN_STATUS%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_NEW_ADMIN_STATUS=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+echo %h_NEW_ADMIN_STATUS%>>%h_new_Name%.dll
 echo The account %_bBWhite%%_fBlack%"%new_Name:-= %"%_RESET% has been granted admin permissions!
 echo you may continue...
 set /a FTSU=0
