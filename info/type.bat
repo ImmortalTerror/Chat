@@ -37,10 +37,12 @@ Set _fBWhite=[97m
 Set _bBWhite=[107m
 Set _RESET=[0m
 
+@REM Some stuff brought over from chat.bat
 if "%1" NEQ "1" goto :FAIL
 
 set NAME=%2
-set NAME=%NAME:-= %
+set %h_NAME%=%4
+set h_ADMIN=%5
 
 set /a NICKED=0
 set /a CHATASED=0
@@ -53,16 +55,16 @@ if %3==TRUE (
 
 goto :CHATJOIN
 
-
+pause
 
 @REM If user did not run chat.bat
 :FAIL
 cls
-title %_fRed%NOT AUTHORIZED%_RESET%
+title NOT AUTHORIZED
 color 4
 echo %_fRed%%_bRed%//////////////////////
-echo /   %_fBWhite%%_bBlack%NOT AUTHORIZED%_fRed%%_bRed%   /
-echo /   %_fBWhite%%_bBlack%RUN "chat.bat"%_fRed%%_bRed%   /
+echo /%_bBlack%   NOT AUTHORIZED   %_bRed%/
+echo /%_bBlack%   RUN "chat.bat"   %_bRed%/
 echo //////////////////////%_RESET%
 echo 
 echo %DATE% %TIME% ^>^> %USERNAME% Has tried to access type.bat without running chat.bat >>logs.log
@@ -71,27 +73,34 @@ exit
 
 
 
+@REM Announces that you joined the chat
 :CHATJOIN
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Joined the chat >> logs.log
 echo %_fblue%%DATE% %TIME% %_fRed%^>^> %_fBGreen%%NAME%%_RESET% Joined the chat >> chat.log
 
 @REM Main chat
 :CHAT
-if exist "users\%NAME%.ban" goto :BANNED
+
+@REM Checks if you are banned
+if exist "users\%h_NAME%.ban" goto :BANNED
 if exist "users\%USERNAME%.ban" goto :BANNED
+
 cls
 
+@REM Adds title
 if "%ADMIN%" NEQ "TRUE" (
     title TYPE HERE %NAME%   -   Type /help to see a list of commands
 )
 if "%ADMIN%"=="TRUE" (
     title TYPE HERE %NAME%   -   Type /help to see a list of commands - ADMIN MODE -
 )
+
 color 7
 
 set /p TEXT=^>^>
 
-if exist "users\%NAME%.ban" goto :BANNED
+@REM Another ban check
+if exist "users\%h_NAME%.ban" goto :BANNED
 if exist "users\%USERNAME%.ban" goto :BANNED
 
 if "%TEXT%"=="" goto :CHAT
@@ -103,9 +112,7 @@ set "text=%text:bitch=*****%"
 set "text=%text:whore=*****%"
 set "text=%text:homo=****%"
 set "text=%text:fag=***%"
-set "text=%text:nig=***%"
 set "text=%text:cunt=****%"
-set "text=%text:coon=****%"
 
 
 
@@ -135,6 +142,7 @@ if NOT "%TEXT%"=="%TEXT:/demote=%" goto :DEMOTE
 
 
 
+@REM Sends message
 echo ^<%_fbGreen%%NAME%%_RESET%^> %TEXT% >> chat.log
 set TEXT=
 echo %_fBGreen%%_fBGreen%Message sent%_RESET%%_RESET%
@@ -277,7 +285,7 @@ title LOGS
 cls
 echo %_fblue%Logs:%_RESET%
 echo.
-type logs.log
+if exist logs.log type logs.log
 echo.
 echo.
 echo %_fbGreen%Press any key to go back
@@ -440,13 +448,13 @@ set /a CHATASED=1
 
 @REM clone of the main chat, but with your CHATAS nickname
 :CHATASLOOP
-if exist "users\%NAME%.ban" goto :BANNED
+if exist "users\%h_NAME%.ban" goto :BANNED
 if exist "users\%USERNAME%.ban" goto :BANNED
 cls
 title Chatting as %CHATASN% - Type /back to go back - Type /help to see a list of commands
 color 7
 set /p TEXT=^>^>
-if exist "users\%NAME%.ban" goto :BANNED
+if exist "users\%h_NAME%.ban" goto :BANNED
 if exist "users\%USERNAME%.ban" goto :BANNED
 
 if "%TEXT%"=="" goto :CHATASLOOP
@@ -458,9 +466,7 @@ set "text=%text:bitch=*****%"
 set "text=%text:whore=*****%"
 set "text=%text:homo=****%"
 set "text=%text:fag=***%"
-set "text=%text:nig=***%"
 set "text=%text:cunt=****%"
-set "text=%text:coon=****%"
 
 
 
@@ -496,6 +502,7 @@ goto :CHATASLOOP
 
 
 
+@REM Removes chatas name
 :UNCHATAS
 cls
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Stopped chatting as %CHATASN% >>logs.log
@@ -595,7 +602,7 @@ cls
 
 @REM clone of main chat but for nicked users
 :NCHAT
-if exist "users\%NAME%.ban" goto :BANNED
+if exist "users\%h_NAME%.ban" goto :BANNED
 if exist "users\%USERNAME%.ban" goto :BANNED
 cls
 if "%ADMIN%" NEQ "TRUE" title TYPE HERE %NAME% - Nickname: %NICK% - Type /back to go back - Type /help to see a list of commands
@@ -612,11 +619,13 @@ set "text=%text:bitch=*****%"
 set "text=%text:whore=*****%"
 set "text=%text:homo=****%"
 set "text=%text:fag=***%"
-set "text=%text:nig=***%"
 set "text=%text:cunt=****%"
-set "text=%text:coon=****%"
-if exist "users\%NAME%.ban" goto :BANNED
+
+
+if exist "users\%h_NAME%.ban" goto :BANNED
 if exist "users\%USERNAME%.ban" goto :BANNED
+
+
 @REM Commands
 if "%TEXT%"=="/help" goto :help
 if "%TEXT%"=="/info" goto :info
@@ -662,6 +671,7 @@ goto :CHAT
 
 
 
+@REM Bans user
 :ban
 if "%ADMIN%" NEQ "TRUE" (
     echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
@@ -702,20 +712,27 @@ if "%BAN%"=="" (
     goto :CHAT
 )
 cls
-set BAN=%BAN: =-%
-if NOT EXIST "users\%BAN%.dll" goto :ACCNOTEXIST
-if EXIST "users\%BAN%.ban" goto :ALREADYBANNED
+
+echo %BAN%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_BAN=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+if NOT EXIST "users\%h_BAN%.dll" goto :ACCNOTEXIST
+if EXIST "users\%h_BAN%.ban" goto :ALREADYBANNED
 color 4
-title %BAN:-= % has been banned
+title %BAN% has been banned
 echo %_bRed%%_fRed%///////////////////
 echo /%_bBlack%   USER BANNED   %_bRed%/
 echo ///////////////////%_RESET%
 echo 
 echo %DATE% %TIME% ^>^> *%BAN:-= % was banned by *%NAME% (%USERNAME%) >> logs.log
 echo %_fblue%%DATE% %TIME% %_fRed%^>^> %_fbgreen%%BAN:-= %%_RESET% was banned by %_fbgreen%%NAME%%_RESET% >> chat.log
-set BAN=%BAN: =-%
-echo %DATE% %TIME% ^>^> %BAN:-= % was banned by *%NAME% (%USERNAME%) >users\%BAN%.ban
-echo %BAN:-= % - Banned by *%NAME% (%USERNAME%) on %DATE% at %TIME%>>users\bans.log
+set BAN=%BAN%
+echo %DATE% %TIME% ^>^> %BAN:-= % was banned by *%NAME% (%USERNAME%) >users\%h_BAN%.ban
+echo %BAN% - Banned by *%NAME% (%USERNAME%) on %DATE% at %TIME%>>users\bans.log
 timeout /t 3 /nobreak >nul
 if %CHATASED%==1 goto :CHATASLOOP
 if %NICKED%==1 goto :NCHAT
@@ -723,6 +740,7 @@ goto :CHAT
 
 
 
+@REM Unbans user
 :unban
 if "%ADMIN%" NEQ "TRUE" (
     echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
@@ -763,18 +781,24 @@ if "%UNBAN%"=="" (
     goto :CHAT
 )
 cls
-set UNBAN=%UNBAN: =-%
-if NOT EXIST "users\%UNBAN%.dll" goto :ACCNOTEXIST
-if NOT EXIST "users\%UNBAN%.ban" goto :BANNOTEXIST
-title %UNBAN:-= % has been unbanned
+
+echo %UNBAN%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_UNBAN=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+if NOT EXIST "users\%h_UNBAN%.dll" goto :ACCNOTEXIST
+if NOT EXIST "users\%h_UNBAN%.ban" goto :BANNOTEXIST
+title %UNBAN% has been unbanned
 echo %_bRed%%_fRed%/////////////////////
 echo /%_bBlack%   USER UNBANNED   %_bRed%/
 echo /////////////////////%_RESET%
 echo 
 echo %DATE% %TIME% ^>^> *%UNBAN:-= % was unbanned by *%NAME% (%USERNAME%) >> logs.log
 echo %_fblue%%DATE% %TIME% %_fRed%^>^> %_fbgreen%%UNBAN:-= %%_RESET% was unbanned by %_fbgreen%%NAME%%_RESET% >> chat.log
-del /q "users\%UNBAN%.ban"
-set UNBAN=%UNBAN:-= %
+del /q "users\%h_UNBAN%.ban"
 findstr /V /I /R /C:"^%UNBAN%\>" "users\bans.log" > "users\new_bans.log"
 move /Y "users\new_bans.log" "users\bans.log">nul
 timeout /t 3 /nobreak >nul
@@ -784,6 +808,7 @@ goto :CHAT
 
 
 
+@REM Pc bans user (bans windows account)
 :PCBAN
 if "%ADMIN%" NEQ "TRUE" (
     echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
@@ -841,6 +866,7 @@ goto :CHAT
 
 
 
+@REM Un pc ban's
 :UNPCBAN
 if "%ADMIN%" NEQ "TRUE" (
     echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
@@ -897,6 +923,7 @@ if %NICKED%==1 goto :NCHAT
 goto :CHAT
 
 
+@REM If the account of the user you are trying to (un)ban does not exist
 :ACCNOTEXIST
 cls
 title Account does not exist
@@ -914,8 +941,9 @@ goto :CHAT
 if %CHATASED%==1 goto :CHATASLOOP
 
 
-:BANNOTEXIST
 
+@REM If the user you are trying to unban is not banned
+:BANNOTEXIST
 cls
 title User is not banned
 color 4
@@ -932,6 +960,8 @@ goto :CHAT
 if %CHATASED%==1 goto :CHATASLOOP
 
 
+
+@REM If the user you are trying to ban is already banned
 :ALREADYBANNED
 cls
 title User is already banned
@@ -949,6 +979,8 @@ goto :CHAT
 if %CHATASED%==1 goto :CHATASLOOP
 
 
+
+@REM Message when you are banned
 :BANNED
 cls
 color 4
@@ -964,6 +996,7 @@ exit
 
 
 
+@REM Command to delete other users accounts
 :TERMINATE
 if "%ADMIN%" NEQ "TRUE" (
     echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
@@ -1004,10 +1037,17 @@ if "%TERMINATEACC%"=="" (
     goto :CHAT
 )
 cls
-set TERMINATEACC=%TERMINATEACC: =-%
+
+echo %TERMINATEACC%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_TERMINATEACC=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
 title /terminate
 color 4
-if NOT EXIST "users\%TERMINATEACC%.dll" (
+if NOT EXIST "users\%h_TERMINATEACC%.dll" (
 
     cls
     title %TERMINATEACC%.dll NOT FOUND
@@ -1029,10 +1069,11 @@ echo /%_bBlack%   DELETING ACCOUNT   %_bRed%/
 echo ////////////////////////%_RESET%
 echo 
 TIMEOUT /t 2 /nobreak >nul
-del /q users\%TERMINATEACC%.dll
+
+del /q users\%h_TERMINATEACC%.dll
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Terminated account "*%TERMINATEACC%" >> logs.log
-title %TERMINATEACC%.dll Successfully deleted
-echo %_fbgreen%%TERMINATEACC%.dll%_RESET% has been %_fRed%deleted%_RESET%.
+title %TERMINATEACC%'s account has been Successfully deleted
+echo %_fbgreen%%TERMINATEACC%%_RESET% (%_fblue%%h_TERMINATEACC%.dll%_RESET%) has been %_fRed%deleted%_RESET%.
 TIMEOUT /t 3 >nul
 if %CHATASED%==1 goto :CHATASLOOP
 if %NICKED%==1 goto :NCHAT
@@ -1040,6 +1081,7 @@ goto :CHAT
 
 
 
+@REM Command to change your password
 :CHANGEPASSWORD
 cls
 color 4
@@ -1066,32 +1108,15 @@ set "psCommand=powershell -Command "$pword = read-host 'Password' -AsSecureStrin
            [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)""
 for /f "usebackq delims=" %%p in (`%psCommand%`) do set C_PASSWORD=%%p
 
-setlocal enabledelayedexpansion
+echo %C_PASSWORD%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p C_PASSWORD=<%temp%\hashoutput.tmp
 
-set inputcode=9375 
-set code=%C_PASSWORD%
-set chars=0123456789abcdefghijklmnopqrstuvwxyz
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
 
-for /L %%N in (10 1 36) do (
-    for /F %%C in ("!chars:~%%N,1!") do (
-        set /a MATH=%%N*%inputcode%
-        for /f %%F in ("!MATH!") do (
-            set "code=!code:%%C=-%%F!"
-        )
-    )
-)
-
-set C_PASSWORD=!code!
-set "C_PASSWORD=%C_PASSWORD: =_%"
-
-setlocal disabledelayedexpansion
-
-findstr /I /R /C:"^p\>" "users\%NAME%.dll">%TEMP%\CHATCHANGEPW.tmp
-set /p password_file=<%TEMP%\CHATCHANGEPW.tmp
-del %TEMP%\CHATCHANGEPW.tmp
-set password_file=%password_file:p!=%
+set /p password_file=<\users%h_NAME%.dll
 if %C_PASSWORD%==%password_file% goto :CORRECT_PASSWORD
-goto :WRONG_PASSWORD
 
 :WRONG_PASSWORD
 cls
@@ -1136,29 +1161,18 @@ if "%NEW_PASSWORD%" NEQ "%CONFIRM_PASS%" (
     goto :CHAT
 )
 
-setlocal enabledelayedexpansion
+echo %NEW_PASSWORD%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_NEW_PASSWORD=<%temp%\hashoutput.tmp
 
-set inputcode=9375 
-set code=%NEW_PASSWORD%
-set chars=0123456789abcdefghijklmnopqrstuvwxyz
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
 
-for /L %%N in (10 1 36) do (
-    for /F %%C in ("!chars:~%%N,1!") do (
-        set /a MATH=%%N*%inputcode%
-        for /f %%F in ("!MATH!") do (
-            set "code=!code:%%C=-%%F!"
-        )
-    )
-)
 
-set NEW_PASSWORD=!code!
-set "NEW_PASSWORD=%NEW_PASSWORD: =_%"
+del %h_NAME%.dll
+echo %h_NEW_PASSWORD%>users\%h_NAME%.dll
+echo %h_ADMIN%>>users\%h_NAME%.dll
 
-setlocal disabledelayedexpansion
-
-echo p!%NEW_PASSWORD%>%NAME%.dll
-if "%ADMIN%"=="TRUE" echo a!TRUE>>users\%NAME%.dll
-if "%ADMIN%"=="FALSE" echo a!FALSE>>users\%NAME%.dll
 cls
 title password changed successfully
 color 2
@@ -1174,6 +1188,7 @@ goto :CHAT
 
 
 
+@REM Command to delete your account
 :deleteaccount
 cls
 color 4
@@ -1198,30 +1213,15 @@ set "psCommand=powershell -Command "$pword = read-host 'Password' -AsSecureStrin
      $BSTR=[System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pword); ^
            [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)""
 for /f "usebackq delims=" %%p in (`%psCommand%`) do set DELCURRENTPASSWORD=%%p
-set DELNAME=%NAME: =-%
-findstr /I /R /C:"^p\>" "users\%DELNAME%.dll">%TEMP%\CHATDELPW.tmp
-set /p DELPASSWORD=<%TEMP%\CHATDELPW.tmp
-del %TEMP%\CHATDELPW.tmp
-set DELPASSWORD=%DELPASSWORD:p!=%
 
-setlocal enabledelayedexpansion
+set /p DELPASSWORD=<users\%h_NAME%.dll
 
-set inputcode=9375 
-set code=%DELCURRENTPASSWORD%
-set chars=0123456789abcdefghijklmnopqrstuvwxyz
+echo %DELCURRENTPASSWORD%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p DELCURRENTPASSWORD=<%temp%\hashoutput.tmp
 
-for /L %%N in (10 1 36) do (
-    for /F %%C in ("!chars:~%%N,1!") do (
-        set /a MATH=%%N*%inputcode%
-        for /f %%F in ("!MATH!") do (
-            set "code=!code:%%C=-%%F!"
-        )
-    )
-)
-set DELCURRENTPASSWORD=!code!
-set "DELCURRENTPASSWORD=%DELCURRENTPASSWORD: =_%"
-
-setlocal disabledelayedexpansion
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
 
 if NOT %DELCURRENTPASSWORD%==%DELPASSWORD% (
     cls
@@ -1242,7 +1242,7 @@ echo /%_bBlack%   DELETING ACCOUNT   %_bRed%/
 echo ////////////////////////%_RESET%
 echo.
 timeout /t 3 /nobreak >nul
-del /q users\%DELNAME%.dll
+del /q users\%h_NAME%.dll
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) deleted there account>>logs.log
 echo %_fGreen%Account delete.
 echo %_fblue%It was nice having you around :)%_RESET%
@@ -1253,6 +1253,7 @@ exit
 
 
 
+@REM Shows banned users
 :BANLIST
 if "%ADMIN%" NEQ "TRUE" (
     echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
@@ -1284,6 +1285,7 @@ goto :CHAT
 
 
 
+@REM Debug mode (Probablt broken so i disabled it)
 :debug
 if "%ADMIN%" NEQ "TRUE" (
     echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
@@ -1327,11 +1329,15 @@ if %NICKED%==1 goto :NCHAT
 goto :CHAT
 
 
+
+@REM Very secret easter egg
 :easter_ehg
 start dino.bat
 exit
 
 
+
+@REM Promote an account to admin
 :PROMOTE
 if "%ADMIN%" NEQ "TRUE" (
     echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT%% >> chat.log
@@ -1373,11 +1379,19 @@ if "%PROMOTE%"=="" (
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-if NOT EXIST "users\%PROMOTE: =-%.dll" (
+
+echo %PROMOTE%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_PROMOTE=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+if NOT EXIST "users\%h_PROMOTE%.dll" (
 
     cls
     color 4
-    title %PROMOTE: =-%.dll NOT FOUND
+    title %PROMOTE%.dll NOT FOUND
     echo %_bRed%%_fRed%//////////////////////////////
     echo /%_bBlack%   ACCOUNT DOES NOT EXIST   %_bRed%/
     echo //////////////////////////////%_RESET%
@@ -1388,10 +1402,24 @@ if NOT EXIST "users\%PROMOTE: =-%.dll" (
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-findstr /I /R /C:"^a\>" "users\%PROMOTE%.dll">%TEMP%\ADMINCH.tmp
-set /p ADMINCH=<%TEMP%\ADMINCH.tmp
-del %TEMP%\ADMINCH.tmp
-set ADMINCH=%ADMINCH:a!=%
+
+FOR /F "skip=1" %%c IN (users\%h_PROMOTE%.dll) DO set f_ADMINCH=%%c
+
+set h_ADMINCH=8Fas3%h_PROMOTE%onRG621
+
+echo %h_ADMINCH%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_ADMINCH=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+if %f_ADMINCH%==%h_ADMINCH% (
+    set ADMINCH=TRUE
+) ELSE (
+    set ADMINCH=FALSE
+)
+
 if "%ADMINCH%"=="TRUE" (
     cls
     color 4
@@ -1420,10 +1448,19 @@ if %ERRORLEVEL%==2 (
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-set PROMOTE=%PROMOTE: =-%
-findstr /V /I /R /C:"^a\>" "users\%PROMOTE%.dll" > "users\%PROMOTE%.dll.tmp"
-move /Y "users\%PROMOTE%.dll.tmp" "users\%PROMOTE%.dll">nul
-echo a!TRUE>>users\%PROMOTE%.dll
+set /p new_admin_password=<users\%h_PROMOTE%.dll
+echo %new_admin_password%>users\%h_PROMOTE%.dll.tmp
+move /Y "users\%h_PROMOTE%.dll.tmp" "users\%h_PROMOTE%.dll">nul
+
+set NEW_ADMIN_STATUS=8Fas3%h_PROMOTE%onRG621
+echo %NEW_ADMIN_STATUS%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_NEW_ADMIN_STATUS=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+echo %h_NEW_ADMIN_STATUS%>>users\%h_PROMOTE%.dll
 color 2
 cls
 echo %_bbGreen%%_fbgreen%////////////////////////
@@ -1438,6 +1475,8 @@ if %NICKED%==1 goto :NCHAT
 goto :CHAT
 
 
+
+@REM Removes an accounts admin permissions 
 :DEMOTE
 if "%ADMIN%" NEQ "TRUE" (
     echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT%% >> chat.log
@@ -1479,11 +1518,19 @@ if "%DEMOTE%"=="" (
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-if NOT EXIST "users\%DEMOTE: =-%.dll" (
+
+echo %DEMOTE%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_DEMOTE=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+if NOT EXIST "users\%h_DEMOTE%.dll" (
 
     cls
     color 4
-    title %DEMOTE: =-%.dll NOT FOUND
+    title %DEMOTE%.dll NOT FOUND
     echo %_bRed%%_fRed%//////////////////////////////
     echo /%_bBlack%   ACCOUNT DOES NOT EXIST   %_bRed%/
     echo //////////////////////////////%_RESET%
@@ -1494,10 +1541,24 @@ if NOT EXIST "users\%DEMOTE: =-%.dll" (
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-findstr /I /R /C:"^a\>" "users\%DEMOTE%.dll">%TEMP%\ADMINCH.tmp
-set /p ADMINCH=<%TEMP%\ADMINCH.tmp
-del %TEMP%\ADMINCH.tmp
-set ADMINCH=%ADMINCH:a!=%
+
+FOR /F "skip=1" %%c IN (users\%h_DEMOTE%.dll) DO set f_ADMINCH=%%c
+
+set h_ADMINCH=8Fas3%h_DEMOTE%onRG621
+
+echo %h_ADMINCH%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_ADMINCH=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+if %f_ADMINCH%==%h_ADMINCH% (
+    set ADMINCH=TRUE
+) ELSE (
+    set ADMINCH=FALSE
+)
+
 if "%ADMINCH%"=="FALSE" (
     cls
     color 4
@@ -1526,17 +1587,26 @@ if %ERRORLEVEL%==2 (
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
 )
-set DEMOTE=%DEMOTE: =-%
-findstr /V /I /R /C:"^a\>" "users\%DEMOTE%.dll" > "users\%DEMOTE%.dll.tmp"
-move /Y "users\%DEMOTE%.dll.tmp" "users\%DEMOTE%.dll">nul
-echo a!FALSE>>users\%DEMOTE%.dll
+set /p new_admin_password=<users\%h_DEMOTE%.dll
+echo %new_admin_password%>users\%h_DEMOTE%.dll.tmp
+move /Y "users\%h_DEMOTE%.dll.tmp" "users\%h_DEMOTE%.dll">nul
+
+set NEW_ADMIN_STATUS=73Hs%h_DEMOTE%gGG83A
+echo %NEW_ADMIN_STATUS%>%temp%\hashinput.tmp
+CertUtil -hashfile %temp%\hashinput.tmp sha256 | findstr /v "hash">%temp%\hashoutput.tmp
+set /p h_NEW_ADMIN_STATUS=<%temp%\hashoutput.tmp
+
+del %temp%\hashinput.tmp
+del %temp%\hashoutput.tmp
+
+echo %h_NEW_ADMIN_STATUS%>>users\%h_DEMOTE%.dll
 color 4
 cls
 echo %_bbGreen%%_fbgreen%////////////////////////
 echo /%_RESET%   ACCOUNT DEMOTED    %_bbGreen%%_fbgreen%/
 echo ////////////////////////%_RESET%
 echo.
-echo The account "%_fbgreen%%DEMOTE:-= %%_RESET%" has had their admin permissions %_fRed%revoked%_RESET%!
+echo The account "%_fbgreen%%DEMOTE%%_RESET%" has had their admin permissions %_fRed%revoked%_RESET%!
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) Demoted %DEMOTE%>>logs.log
 timeout /t 3 /nobreak >nul
 if %CHATASED%==1 goto :CHATASLOOP
