@@ -1,9 +1,12 @@
 @echo off
 
-set VERSION=4.0 BETA
+set VERSION=4.0
+set FILETYPE=.bat
 
 
 @REM Chat made by Immortal Terror (Discord: Immortal Terror#6969 | Github: https://github.com/ImmortalTerror | Youtube: https://www.youtube.com/channel/UCMwG-Wmm3RnzPT5bzyjzpeA | Instagram: https://www.instagram.com/immortalterror07/ )
+@REM I would like to thank one of my best friends, A KFC RatChicken for suggesting features and finding ways to implement them.
+@REM He may have not written a single line of code here, but many features wouldn't be possible without him.
 
 Set _fBlack=[30m
 Set _bBlack=[40m
@@ -50,27 +53,25 @@ if NOT EXIST info (
 
 
 
-@REM This has been disabled to make it easier to develop the program
 
 @REM Makes info folder hidden if its not
-@REM attrib info>%temp%\attrib.tmp
-@REM set /p attrib=<%temp%\attrib.tmp
-@REM del /q %temp%\attrib.tmp
-@REM set correct=   SH                %cd%\info
-@REM if "%attrib%" NEQ "%correct%" (
-@REM     attrib +S +H info
-@REM )
-
-
-
-@REM Checks if debug mode is on
-if EXIST debug (
-    set /a DEBUG=1
-    set NAME=test
-    set ADMINCH=FALSE
-    del /q debug
-    goto :CHATSTART
+attrib info>%temp%\attrib.tmp
+set /p attrib=<%temp%\attrib.tmp
+del /q %temp%\attrib.tmp
+set correct=   SH                %cd%\info
+if "%attrib%" NEQ "%correct%" (
+    attrib +S +H info
 )
+
+
+@REM Checks if debug mode is on (DISABLED)
+@REM if EXIST debug (
+@REM     set /a DEBUG=1
+@REM     set NAME=test
+@REM     set ADMINCH=FALSE
+@REM     del /q debug
+@REM     goto :CHATSTART
+@REM )
 set /a DEBUG=0
 
 
@@ -94,7 +95,7 @@ echo %DATE% %TIME% ^>^> %USERNAME% has made it to the dashboard. >>logs.log
 
 @REM Fix the size once im done making v4
 
-mode CON: COLS=68 LINES=54
+mode CON: COLS=68 LINES=45
 cls
 title WELCOME - %VERSION%
 color 7
@@ -116,10 +117,23 @@ echo %_bRed%%_fBlack%ANNOUNCEMENTS:%_RESET%
 
 @REM VVVV CHANGE THIS VVVV
 
-echo V4.0 coming soon!
+echo V4.0 is here!
+echo And V5.0 will come one day...
 echo.
 echo.
 echo %_bGreen%%_fBlack%UPDATES:%_RESET%
+echo %_fBBlue%V4.0%_RESET%
+echo -colours in chat.bat
+echo -colours in type.bat
+echo -removing junk code
+echo -checks for info folder
+echo -makes info folder hidden and system
+echo -swap encrypting for hashing
+echo -add username hashing
+echo -comments to make code more readable
+echo -fix up more junk code
+echo -Disabled /debug as it probably won't work anymore
+echo.
 echo %_fBBlue%V3.9.2%_RESET%
 echo -Fixed some logging errors
 echo -Added First time setup
@@ -131,23 +145,6 @@ echo %_fBBlue%V3.9.1%_RESET%
 echo -When typing passwords, all characters will now be viewed as "*"
 echo -/chatas now supports commands
 echo -Added an easter egg :)
-echo.
-echo %_fBBlue%V3.9%_RESET%
-echo -Reworked /nick
-echo -Reworked /ad
-echo -Reworked /chatas
-echo -Added /changepassword
-echo -Reworked all the ban commands
-echo -Added /terminate (ADMIN COMMAND)
-echo -Added refresh system to /logs (ADMIN COMMAND)
-echo -/logout will now bring up the dashboard
-echo -Fixed some bugs
-echo -Now when chat is open, it says "Welcome" at the top
-echo -Added /deleteaccount
-echo -Added better ban logging.
-echo -Added /bans (ADMIN COMMAND)
-echo -Added /debug (ADMIN COMMAND)
-echo.
 echo.
 pause>nul
 
@@ -448,7 +445,7 @@ cls
 color 7
 if %DEBUG%==0 cd ..
 if %DEBUG%==1 cd info
-start cmd /c "type.bat" 1 %NAME% %ADMINCH% %h_NAME% %h_ADMINCH%
+start type%FILETYPE% 1 %NAME% %ADMINCH% %h_NAME% %h_ADMINCH%
 title Chat
 :CHAT
 if EXIST "%TEMP%\CHATLOGOUT.tmp" (

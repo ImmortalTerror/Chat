@@ -1,6 +1,7 @@
 @echo off
 
 set VERSION=4.0 BETA
+set FILETYPE=.bat
 
 @REM Adds colours (very pretty)
 Set _fBlack=[30m
@@ -64,10 +65,10 @@ title NOT AUTHORIZED
 color 4
 echo %_fRed%%_bRed%//////////////////////
 echo /%_bBlack%   NOT AUTHORIZED   %_bRed%/
-echo /%_bBlack%   RUN "chat.bat"   %_bRed%/
+echo /%_bBlack%   RUN "chat%FILETYPE%"   %_bRed%/
 echo //////////////////////%_RESET%
 echo 
-echo %DATE% %TIME% ^>^> %USERNAME% Has tried to access type.bat without running chat.bat >>logs.log
+echo %DATE% %TIME% ^>^> %USERNAME% Has tried to access type%FILETYPE% without running chat%FILETYPE% >>logs.log
 timeout /t 5 /nobreak >nul
 exit
 
@@ -128,7 +129,7 @@ if "%TEXT%"=="/bans" goto :BANLIST
 if "%TEXT%"=="/slogout" goto :squit
 if "%TEXT%"=="/changepassword" goto :CHANGEPASSWORD
 if "%TEXT%"=="/deleteaccount" goto :deleteaccount
-if "%TEXT%"=="/debug" goto :debug
+@REM if "%TEXT%"=="/debug" goto :debug
 if NOT "%TEXT%"=="%TEXT:/chatas=%" goto :chatas
 if NOT "%TEXT%"=="%TEXT:/ad=%" goto :ad
 if NOT "%TEXT%"=="%TEXT:/nick=%" goto :nick 
@@ -166,7 +167,7 @@ echo %_fBBlue%/deleteaccount %_fRed%- %_RESET%Deletes your account
 if %NICKED%==1 echo /back %_fRed%- %_RESET%Removes your nickname
 if "%ADMIN%"=="TRUE" echo.
 if "%ADMIN%"=="TRUE" echo %_fBGreen%ADMIN COMMANDS:%_RESET%
-if "%ADMIN%"=="TRUE" echo %_fBBlue%/logs %_fRed%- %_RESET%This will show you when people joined the chat and what there names are ^(stoed in logs.log^).
+if "%ADMIN%"=="TRUE" echo %_fBBlue%/logs %_fRed%- %_RESET%This will show you the every command a user uses, every time someone logs in or our and more.
 if "%ADMIN%"=="TRUE" echo %_fBBlue%/chatfile %_fRed%- %_RESET%This will open the file where the chat is stored ^(chat.log^).
 if "%ADMIN%"=="TRUE" echo %_fBBlue%/chatas (NAME) %_fRed%- %_RESET%Chat with a set username.
 if "%ADMIN%"=="TRUE" echo %_fBBlue%/ad (TEXT) %_fRed%- %_RESET%Advertise something in chat.
@@ -179,7 +180,7 @@ if "%ADMIN%"=="TRUE" echo %_fBBlue%/pcban %_fRed%- %_RESET%Bans person with matc
 if "%ADMIN%"=="TRUE" echo %_fBBlue%/unpcban %_fRed%- %_RESET%unbans person with matching PC username.
 if "%ADMIN%"=="TRUE" echo %_fBBlue%/bans %_fRed%- %_RESET%Shows a list off all banned accounts
 if "%ADMIN%"=="TRUE" echo %_fBBlue%/terminate %_fRed%- %_RESET%Deletes an account.
-if "%ADMIN%"=="TRUE" echo %_fBBlue%/debug %_fRed%- %_RESET%Creates or removes debug.bat which when run will log you into an account called test instantly.
+@REM if "%ADMIN%"=="TRUE" echo %_fBBlue%/debug %_fRed%- %_RESET%Creates or removes debug.bat which when run will log you into an account called test instantly.
 if "%ADMIN%"=="TRUE" echo %_fBBlue%/promote (NAME) %_fRed%- %_RESET%Gives the user admin permissions
 if "%ADMIN%"=="TRUE" echo %_fBBlue%/demote (NAME) %_fRed%- %_RESET%revokes the users admin permissions
 if "%ADMIN%"=="TRUE" echo.
@@ -199,20 +200,20 @@ title /info
 echo %_fGreen%VERSION: %_fRed%%VERSION%
 echo %_fblue%Made by Immortal Terror
 echo.
-echo %_fbGreen%What is this?%_RESET%
-echo This is a chat system for things like school networks. You can type messages and any other people using this can see it.
+echo %_fbgreen%How do I use this?%_RESET%
+echo Just make an account, login, and start talking!
 echo.
-echo %_fBGreen%How do I use it?%_RESET%
-echo There are 2 cmd (Command Prompt) windows open, DON'T CLOSE THEM. One of them shows the chat and the other is where you type.
+echo %_fbgreen%What commands are there?%_RESET%
+echo Type "/help" to see a list of commands.
 echo.
-echo %_fBGreen%Can people find out my password?%_RESET%
-echo No. The passwords are hashed.
+echo %_fbgreen%Can someone get my accounts password?%_RESET%
+echo It is practically impossible for someone to get your password as they are hashed with sha256. Only way they could get it is with brute force.
 echo.
-echo %_fBGreen%Can i have admin perms?%_RESET%
-echo No, %_fRed%fuck off%_RESET%. (Unless your cool and you are given admin)
+echo %_fbgreen%I have found a bug or an issue, what do I do?%_RESET%
+echo If you find any sort of bug, please open an issue on the github page. I will fix it as fast as I can.
 echo.
-echo %_fBGreen%What can admins do?%_RESET%
-echo Ban and unban, look at logs, advertise, chat as other users, clear chat, logout silently and more.
+echo %_fbgreen%Where can i suggest a feature?%_RESET%
+echo Anywhere really. But either on Github or Discord would be the best.
 echo.
 echo %_fGreen%Press any key to go back%_RESET%
 pause>nul
@@ -482,7 +483,7 @@ if "%TEXT%"=="/bans" goto :BANLIST
 if "%TEXT%"=="/slogout" goto :squit
 if "%TEXT%"=="/changepassword" goto :CHANGEPASSWORD
 if "%TEXT%"=="/deleteaccount" goto :deleteaccount
-if "%TEXT%"=="/debug" goto :debug
+@REM if "%TEXT%"=="/debug" goto :debug
 if NOT "%TEXT%"=="%TEXT:/chatas=%" goto :chatas
 if NOT "%TEXT%"=="%TEXT:/ad=%" goto :ad
 if NOT "%TEXT%"=="%TEXT:/nick=%" goto :nick 
@@ -638,7 +639,7 @@ if "%TEXT%"=="/bans" goto :BANLIST
 if "%TEXT%"=="/slogout" goto :squit
 if "%TEXT%"=="/changepassword" goto :CHANGEPASSWORD
 if "%TEXT%"=="/deleteaccount" goto :deleteaccount
-if "%TEXT%"=="/debug" goto :debug
+@REM if "%TEXT%"=="/debug" goto :debug
 if NOT "%TEXT%"=="%TEXT:/chatas=%" goto :chatas
 if NOT "%TEXT%"=="%TEXT:/ad=%" goto :ad
 if NOT "%TEXT%"=="%TEXT:/nick=%" goto :nick 
@@ -902,6 +903,7 @@ if "%UNPCBAN%"=="" (
     echo ////////////////////////////////%_RESET%
     echo 
     timeout /t 3 >nul
+    @REM Among us?!?
     if %CHATASED%==1 goto :CHATASLOOP
     if %NICKED%==1 goto :NCHAT
     goto :CHAT
@@ -1286,7 +1288,7 @@ goto :CHAT
 
 
 @REM Debug mode (Probablt broken so i disabled it)
-:debug
+@REM :debug
 if "%ADMIN%" NEQ "TRUE" (
     echo ^<%_fbgreen%%NAME%%_RESET%^> %TEXT% >> chat.log
     cls
@@ -1320,7 +1322,7 @@ echo /////////////////////%_RESET%
 echo.
 echo @echo off>>debug.bat
 echo echo. ^>debug>>debug.bat
-echo call Chat.bat>>debug.bat
+echo call Chat%FILETYPE%>>debug.bat
 cd info
 echo %DATE% %TIME% ^>^> *%NAME% (%USERNAME%) turned ON debug mode>>logs.log
 timeout /t 3 /nobreak >nul
