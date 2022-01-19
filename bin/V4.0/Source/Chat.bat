@@ -1,7 +1,40 @@
+::[Bat To Exe Converter]
+::
+::YAwzoRdxOk+EWAjk
+::fBw5plQjdCmDJF+R+gIqJxVRcCOLKEOvBIk/4Onv0+iOrHE0V+0xa7PY0rWaYOkQ5UukQ8JjhjRTm8Rs
+::YAwzuBVtJxjWCl3EqQJgSA==
+::ZR4luwNxJguZRRnk
+::Yhs/ulQjdF+5
+::cxAkpRVqdFKZSDk=
+::cBs/ulQjdF65
+::ZR41oxFsdFKZSDk=
+::eBoioBt6dFKZSTk=
+::cRo6pxp7LAbNWATEpSI=
+::egkzugNsPRvcWATEpSI=
+::dAsiuh18IRvcCxnZtBJQ
+::cRYluBh/LU+EWAnk
+::YxY4rhs+aU+IeA==
+::cxY6rQJ7JhzQF1fEqQJkZksaHErSXA==
+::ZQ05rAF9IBncCkqN+0xwdVsAAlTMbCXqZg==
+::ZQ05rAF9IAHYFVzEqQITIBpALA==
+::eg0/rx1wNQPfEVWB+kM9LVsJDAeKPX/0BLQIiA==
+::fBEirQZwNQPfEVWB+kM9LVsJDCeKPX/a
+::cRolqwZ3JBvQF1fEqQIRaBhcTRDCL3KpErARqOX66+/HtUQJXKIIcYHf1aOdYMIS/kbsc58h0xo=
+::dhA7uBVwLU+EWHCJ+U0iPBpYeAGQLmSoZg==
+::YQ03rBFzNR3SWATElA==
+::dhAmsQZ3MwfNWATE2WsESA==
+::ZQ0/vhVqMQ3MEVWAtB9wLhpYXwHi
+::Zg8zqx1/OA3MEVWAtB9wLhpYXwHi
+::dhA7pRFwIByZRRnk
+::Zh4grVQjdCmDJF+R+gIqJxVRcCOLKEOvBIk/4Onv0+iOrHErAKxvRIzT26DAJfgWig==
+::YB416Ek+ZG8=
+::
+::
+::978f952a14a936cc963da21a135fa983
 @echo off
 
 set VERSION=4.0
-set FILETYPE=.bat
+set FILETYPE=.exe
 
 
 @REM Chat made by Immortal Terror (Discord: Immortal Terror#6969 | Github: https://github.com/ImmortalTerror | Youtube: https://www.youtube.com/channel/UCMwG-Wmm3RnzPT5bzyjzpeA | Instagram: https://www.instagram.com/immortalterror07/ )
