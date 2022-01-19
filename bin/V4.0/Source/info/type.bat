@@ -6,20 +6,20 @@
 ::ZR4luwNxJguZRRnk
 ::Yhs/ulQjdF+5
 ::cxAkpRVqdFKZSDk=
-::cBs/ulQjdF+5
+::cBs/ulQjdF65
 ::ZR41oxFsdFKZSDk=
-::eBoioBt6dFKZSDk=
-::cRo6pxp7LAbNWATEpCI=
-::egkzugNsPRvcWATEpCI=
+::eBoioBt6dFKZSTk=
+::cRo6pxp7LAbNWATEpSI=
+::egkzugNsPRvcWATEpSI=
 ::dAsiuh18IRvcCxnZtBJQ
 ::cRYluBh/LU+EWAnk
 ::YxY4rhs+aU+IeA==
 ::cxY6rQJ7JhzQF1fEqQJkZksaHErSXA==
 ::ZQ05rAF9IBncCkqN+0xwdVsAAlTMbCXqZg==
-::ZQ05rAF9IAHYFVzEqQITIBpADCeNLm7a
+::ZQ05rAF9IAHYFVzEqQIEMQtRLA==
 ::eg0/rx1wNQPfEVWB+kM9LVsJDBCbLG70BLQIiA==
-::fBEirQZwNQPfEVWB+kM9LVsJDBCbLG7a
-::cRolqwZ3JBvQF1fEqQIEIB4UTwuQOSu1APU/4Onvoe+fpy0=
+::fBEirQZwNQPfEVWB+kM9LVsJDDCbLG7a
+::cRolqwZ3JBvQF1fEqQIEIB4UTwuQOSu1APUf4Onvoe+fpy0=
 ::dhA7uBVwLU+EWHCJ+U0iPBpYeAGQLmSoZg==
 ::YQ03rBFzNR3SWATElA==
 ::dhAmsQZ3MwfNWATE2WsESA==
@@ -75,6 +75,7 @@ Set _RESET=[0m
 if "%1" NEQ "1" goto :FAIL
 
 set NAME=%2
+set NAME=%NAME:-= %
 set %h_NAME%=%4
 set h_ADMIN=%5
 

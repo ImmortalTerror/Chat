@@ -54,6 +54,23 @@ Anywhere really. But either on Github or Discord would be the best.
 
 ## Screenshots
 
+![Dashboard](https://i.imgur.com/fSI6DMI.png)
+![Chat](https://i.imgur.com/2TwoAos.png)
+![Help](https://i.imgur.com/1LZMyJW.png)
+![Rules](https://i.imgur.com/luARIna.png)
+![Logs](https://i.imgur.com/ArYoGKt.png)
+![NewName](https://i.imgur.com/VTh7GSw.png)
+![FirstTimeSetup](https://i.imgur.com/twEdWoF.png)
+![Promote](https://i.imgur.com/yFfg4JG.png)
+![AccountExist](https://i.imgur.com/AN3QPDC.png)
+![Password](https://i.imgur.com/Yrnh2Ju.png)
+![PasswordChange](https://i.imgur.com/gBhgcFB.png)
+![terminate](https://i.imgur.com/05RAu7A.png)
+![BanList](https://i.imgur.com/w962Kri.png)
+![InstallStart](https://i.imgur.com/Ehxbbrj.png)
+![InstallDir](https://i.imgur.com/ONNnV9P.png)
+![InstallEnd](https://i.imgur.com/T0tW8C7.png)
+
 # Join my Discord server!
 All changes are posted there.
 [Discord](https://discord.gg/pqAFVCKZhz)

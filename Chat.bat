@@ -445,7 +445,7 @@ cls
 color 7
 if %DEBUG%==0 cd ..
 if %DEBUG%==1 cd info
-start type%FILETYPE% 1 %NAME% %ADMINCH% %h_NAME% %h_ADMINCH%
+start type%FILETYPE% 1 %NAME: =-% %ADMINCH% %h_NAME% %h_ADMINCH%
 title Chat
 :CHAT
 if EXIST "%TEMP%\CHATLOGOUT.tmp" (

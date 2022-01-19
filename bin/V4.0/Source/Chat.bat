@@ -19,7 +19,7 @@
 ::ZQ05rAF9IAHYFVzEqQITIBpALA==
 ::eg0/rx1wNQPfEVWB+kM9LVsJDAeKPX/0BLQIiA==
 ::fBEirQZwNQPfEVWB+kM9LVsJDCeKPX/a
-::cRolqwZ3JBvQF1fEqQIRaBhcTRDCL3KpErARqOX66+/Hq0NdY+sxfIDMyfSsIfQQ4kPteZNN
+::cRolqwZ3JBvQF1fEqQIRaBhcTRDCL3KpErARqOX66+/HtUQJXKIIcYHf1aOdYMIS/kbsc58h0xo=
 ::dhA7uBVwLU+EWHCJ+U0iPBpYeAGQLmSoZg==
 ::YQ03rBFzNR3SWATElA==
 ::dhAmsQZ3MwfNWATE2WsESA==
@@ -86,7 +86,6 @@ if NOT EXIST info (
 
 
 
-@REM This has been disabled to make it easier to develop the program
 
 @REM Makes info folder hidden if its not
 attrib info>%temp%\attrib.tmp
@@ -479,7 +478,7 @@ cls
 color 7
 if %DEBUG%==0 cd ..
 if %DEBUG%==1 cd info
-start type%FILETYPE% 1 %NAME% %ADMINCH% %h_NAME% %h_ADMINCH%
+start type%FILETYPE% 1 %NAME: =-% %ADMINCH% %h_NAME% %h_ADMINCH%
 title Chat
 :CHAT
 if EXIST "%TEMP%\CHATLOGOUT.tmp" (

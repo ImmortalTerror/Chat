@@ -1,6 +1,6 @@
 @echo off
 
-set VERSION=4.0 BETA
+set VERSION=4.0
 set FILETYPE=.bat
 
 @REM Adds colours (very pretty)
@@ -42,6 +42,7 @@ Set _RESET=[0m
 if "%1" NEQ "1" goto :FAIL
 
 set NAME=%2
+set NAME=%NAME:-= %
 set %h_NAME%=%4
 set h_ADMIN=%5
 
